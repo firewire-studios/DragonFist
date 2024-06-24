@@ -7,6 +7,13 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class GameController : MonoBehaviour
 {
+    public static GameController instance;
+    
+    // Players
+    public Fighter p1;
+    public Fighter p2;
+    private Fighter[] _players;
+    
     private const float FixedTimeStep = 1000 / 60;
     private float currentTimeStep = 0.0f;
 
@@ -15,9 +22,20 @@ public class GameController : MonoBehaviour
     Gamepad gp1;
     Gamepad gp2;
 
+    private void Awake()
+    {
+        // Singleton
+        if (instance == null)
+        {
+            instance = this;
+            return;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        _players = new[] {p1, p2};
         buttons = Enum.GetValues(typeof(GamepadButton));
 
         // Validate gamepads
@@ -41,23 +59,36 @@ public class GameController : MonoBehaviour
             currentTimeStep = 0;
         }
         
-        PollInput(gp1);
-        PollInput(gp2);
+        PollInput(gp1,0);
+        PollInput(gp2,1);
     }
 
     private void FixedTimeStepUpdate()
     {
-        
+        _players[0].FixedTimestepUpdate();
+        _players[1].FixedTimestepUpdate();
     }
 
-    private void PollInput(Gamepad gp)
+    private void PollInput(Gamepad gp, int team)
     {
         foreach (GamepadButton button in buttons)
         {
-            if (gp[button].wasReleasedThisFrame)
+            if (gp[button].isPressed)
             {
+                if (button == GamepadButton.DpadRight)
+                {
+                    _players[team].xSpeed = 1;
+                }
+                
+                if (button == GamepadButton.DpadLeft)
+                {
+                    _players[team].xSpeed = -1;
+                }
+                
                 Debug.Log(gp[button].shortDisplayName);
             }
         }
+        
+        
     }
 }
