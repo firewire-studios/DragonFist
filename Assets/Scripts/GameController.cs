@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
 
 public class GameController : MonoBehaviour
@@ -17,11 +19,11 @@ public class GameController : MonoBehaviour
     private const float FixedTimeStep = 1000 / 60;
     private float currentTimeStep = 0.0f;
 
-    private Array buttons;
+    private GamepadButton[] buttons;
     
     Gamepad gp1;
     Gamepad gp2;
-
+    
     private void Awake()
     {
         // Singleton
@@ -36,7 +38,17 @@ public class GameController : MonoBehaviour
     void Start()
     {
         _players = new[] {p1, p2};
-        buttons = Enum.GetValues(typeof(GamepadButton));
+        buttons = new[]
+        {
+            GamepadButton.DpadDown,
+            GamepadButton.DpadUp,
+            GamepadButton.DpadLeft,
+            GamepadButton.DpadRight,
+
+            GamepadButton.A,
+            GamepadButton.X,
+            GamepadButton.Y,
+        };
 
         // Validate gamepads
         if (Gamepad.all.Count < 2)
@@ -65,12 +77,88 @@ public class GameController : MonoBehaviour
 
     private void FixedTimeStepUpdate()
     {
+        // Pre player update
+        foreach (var fighter in _players)
+        {
+            if (fighter.buffer.Count < 1)
+            {
+                continue;
+            }
+            
+            if (fighter.buffer.Peek().frames >= 30)
+            {
+                //Debug.Log($"Dequeued {fighter.buffer.Peek().action}");
+                fighter.buffer.Dequeue();
+            }
+            else
+            {
+                fighter.buffer.Peek().frames += 1;
+            }
+
+            // Gather a list of moves that we can do
+
+            List<FighterMove> allowedMoves = new List<FighterMove>();
+            foreach (var fighterMove in fighter.moves)
+            {
+                // Can this move be executed with this buffer
+                bool canUse = false;
+                int index = 0;
+                
+                foreach (var bufferedInput in fighter.buffer)
+                {
+                    if (fighterMove.Actions.Count == index)
+                    {
+                        canUse = true;
+                    }
+                    
+                    if (fighterMove.Actions.Count >= index + 1)
+                    {
+                        if (fighterMove.Actions[index] != bufferedInput.action)
+                        {
+                            break;
+                        }
+                    }
+
+                    index++;
+                }
+
+                if (canUse)
+                {
+                    Debug.Log($"Adding {fighterMove.MoveName} to allowed moves");
+                    allowedMoves.Add(fighterMove);
+                }
+                
+            }
+
+            // Get the first item of the list and use the move
+            FighterMove selectedMove = null;
+            if (allowedMoves.Count > 0)
+            {
+                Debug.Log($"Allowed Moves {allowedMoves.Count}");
+                
+                // Sort the list of allowed moves
+                allowedMoves.Sort((x,y) => x.Priority.CompareTo(y.Priority));
+                selectedMove = allowedMoves[0];
+
+            }
+
+            if (selectedMove != null)
+            {
+                Debug.Log($"Used Move {selectedMove.MoveName}");
+                fighter.FlushBuffer();
+            }
+            
+
+        }
+        
+        
         _players[0].FixedTimestepUpdate();
         _players[1].FixedTimestepUpdate();
     }
 
     private void PollInput(Gamepad gp, int team)
     {
+        
         foreach (GamepadButton button in buttons)
         {
             if (gp[button].isPressed)
@@ -85,10 +173,12 @@ public class GameController : MonoBehaviour
                     _players[team].xSpeed = -1;
                 }
                 
-                Debug.Log(gp[button].shortDisplayName);
+            }
+            
+            if (gp[button].wasPressedThisFrame)
+            {
+                _players[team].HandleButtonPressed(button);
             }
         }
-        
-        
     }
 }

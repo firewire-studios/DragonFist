@@ -123,6 +123,58 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &45805216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 45805218}
+  - component: {fileID: 45805217}
+  m_Layer: 0
+  m_Name: BufferRenderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &45805217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45805216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b569a8e974bea4b51b790f1dc5110dd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  down: {fileID: 2800000, guid: a44eba9f57d4f4236a1768a4417a6954, type: 3}
+  left: {fileID: 2800000, guid: a8da21d0647934f678a1584d8e8a2281, type: 3}
+  right: {fileID: 2800000, guid: 9b377f439506e4708b9ebf4fe4ac0813, type: 3}
+  up: {fileID: 2800000, guid: 45af2bdbca87c41189c3a29449c0724b, type: 3}
+  x: {fileID: 2800000, guid: e4190ee8f1be044298a79f866c137698, type: 3}
+  a: {fileID: 2800000, guid: 241eb8233866342e49c5b42aee3a1528, type: 3}
+  b: {fileID: 2800000, guid: bc2f79a6d4fa04168b83a698050be66b, type: 3}
+  y: {fileID: 2800000, guid: 6f763fffccd504e36a2a0c4caea165a1, type: 3}
+--- !u!4 &45805218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45805216}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.40987462, y: 0.41143945, z: 8.980553}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,6 +297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6c79f0380cd491f889bdae0811d2f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xSpeed: 0
   team: 1
 --- !u!212 &1263843721
 SpriteRenderer:
@@ -344,6 +397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   p1: {fileID: 1784312223}
   p2: {fileID: 1263843720}
+  ButtonTexture: {fileID: 2800000, guid: e4190ee8f1be044298a79f866c137698, type: 3}
 --- !u!4 &1499214478
 Transform:
   m_ObjectHideFlags: 0
@@ -456,4 +510,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6c79f0380cd491f889bdae0811d2f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xSpeed: 0
   team: 0
