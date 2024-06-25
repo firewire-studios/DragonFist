@@ -77,6 +77,19 @@ public class GameController : MonoBehaviour
 
     private void FixedTimeStepUpdate()
     {
+        // Set player left and right positions
+
+        if (p1.transform.position.x < p2.transform.position.x)
+        {
+            p1.SetSide(0);
+            p2.SetSide(1);
+        }
+        else
+        {
+            p1.SetSide(1);
+            p2.SetSide(0);
+        }
+        
         // Pre player update
         foreach (var fighter in _players)
         {
@@ -98,43 +111,52 @@ public class GameController : MonoBehaviour
             // Gather a list of moves that we can do
 
             List<FighterMove> allowedMoves = new List<FighterMove>();
-            foreach (var fighterMove in fighter.moves)
+            BufferedInput[] buffer = fighter.buffer.ToArray();
+
+            for (int i = 0; i < buffer.Length; i ++)
             {
-                // Can this move be executed with this buffer
-                bool canUse = false;
-                int index = 0;
-                
-                foreach (var bufferedInput in fighter.buffer)
+                foreach (var fighterMove in fighter.moves)
                 {
-                    if (fighterMove.Actions.Count == index)
+                    // Can this move be executed with this buffer
+                    bool canUse = false;
+                    int index = 0;
+
+                    for (int j = i; j < buffer.Length; j++)
                     {
-                        canUse = true;
-                    }
-                    
-                    if (fighterMove.Actions.Count >= index + 1)
-                    {
-                        if (fighterMove.Actions[index] != bufferedInput.action)
+                        BufferedInput bufferedInput = buffer[j];
+                        
+                        if (fighterMove.Actions.Count >= index + 1)
                         {
-                            break;
+                            if (fighterMove.Actions[index] != bufferedInput.action)
+                            {
+                               // Debug.Log($"Move disallowed as {fighterMove.Actions[index]} does not match {bufferedInput.action}" );
+                            }
+                        }
+
+                        index++;
+                        
+                        if (fighterMove.Actions.Count == index && fighterMove.Actions[index -1] == bufferedInput.action)
+                        {
+                            //Debug.Log("Here");
+                            canUse = true;
                         }
                     }
 
-                    index++;
+                    if (canUse)
+                    {
+                        //Debug.Log($"Adding {fighterMove.MoveName} to allowed moves");
+                        allowedMoves.Add(fighterMove);
+                    }
+                    
                 }
-
-                if (canUse)
-                {
-                    Debug.Log($"Adding {fighterMove.MoveName} to allowed moves");
-                    allowedMoves.Add(fighterMove);
-                }
-                
             }
+
 
             // Get the first item of the list and use the move
             FighterMove selectedMove = null;
             if (allowedMoves.Count > 0)
             {
-                Debug.Log($"Allowed Moves {allowedMoves.Count}");
+                //Debug.Log($"Allowed Moves {allowedMoves.Count}");
                 
                 // Sort the list of allowed moves
                 allowedMoves.Sort((x,y) => x.Priority.CompareTo(y.Priority));
@@ -146,6 +168,9 @@ public class GameController : MonoBehaviour
             {
                 Debug.Log($"Used Move {selectedMove.MoveName}");
                 fighter.FlushBuffer();
+
+                fighter.stillFrames = 5;
+                fighter.ScissorAttack();
             }
             
 

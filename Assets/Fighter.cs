@@ -6,9 +6,28 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class Fighter : MonoBehaviour
 {
+    public int health = 100;
+    
     public int xSpeed = 0;
     public Queue<BufferedInput> buffer;
     public List<FighterMove> moves;
+
+    public HealthBar healthbar;
+    
+    /**
+     *Hitbox
+     */
+    public GameObject Hitbox;
+
+    /**
+     * Hurtboxes
+     */
+    public GameObject Hurtbox;
+
+    /**
+     * If more than 0 then character cannot move
+     */
+    public int stillFrames = 0;
     
     /**
      * Set in editor
@@ -20,21 +39,46 @@ public class Fighter : MonoBehaviour
     {
         buffer = new Queue<BufferedInput>();
         
+        Hurtbox.SetActive(false);
+        
         // Register Moves
         moves = new List<FighterMove>();
         
-        FighterMove Fireball = new FighterMove("Fireball",
-            new List<Action>() {Action.Down,Action.Forward,Action.Paper},
-            1
+        // Basic Moves
+        FighterMove Rock = new FighterMove("Rock",
+            new List<Action>() {Action.Rock},
+            10
         );
         
-        FighterMove Punch = new FighterMove("Punch",
+        FighterMove Paper = new FighterMove("Paper",
             new List<Action>() {Action.Paper},
             10
         );
         
+        FighterMove Scissors = new FighterMove("Scissors",
+            new List<Action>() {Action.Scissor},
+            10
+        );
+        
+        
+        FighterMove Fireball = new FighterMove("Fireball",
+            new List<Action>() {Action.Down,Action.Forward,Action.Paper},
+            2
+        );
+        
+        
+        FighterMove Doomfist = new FighterMove("Doomfist",
+                new List<Action>(){Action.Down,Action.Forward,Action.Rock},
+                1
+            );
+        
+        
+        moves.Add(Rock);
+        moves.Add(Paper);
+        moves.Add(Scissors);
+        
         moves.Add(Fireball);
-        moves.Add(Punch);
+        moves.Add(Doomfist);
         
     }
 
@@ -49,6 +93,12 @@ public class Fighter : MonoBehaviour
         
     }
 
+    public void ScissorAttack()
+    {
+        // Grab the correct hurtbox and make it active
+        Hurtbox.SetActive(true);
+    }
+
     public void FlushBuffer()
     {
         buffer.Clear();
@@ -56,7 +106,18 @@ public class Fighter : MonoBehaviour
     
     public void FixedTimestepUpdate()
     {
-        transform.position += new Vector3(xSpeed,0,0);
+
+        healthbar.SetHealth(health);
+
+        if (stillFrames > 0)
+        {
+
+            stillFrames--;
+            return;
+        }
+        
+        Hurtbox.SetActive(false);
+        transform.position += new Vector3(xSpeed * 0.2f,0,0);
         xSpeed = 0;
     }
     
@@ -109,5 +170,24 @@ public class Fighter : MonoBehaviour
         Rock, // a
         Paper, // x
         Scissor // y
+    }
+
+    /**
+     * Set the side of the fighter
+     * 0 = left
+     * 1 = right
+     */
+    public void SetSide(int side)
+    {
+        if (side == 0)
+        {
+            Hurtbox.transform.localPosition = new Vector3(0.6f,0.3f,-1);
+            return;
+        }
+
+        if (side == 1)
+        {
+            Hurtbox.transform.localPosition = new Vector3(-0.6f,0.3f,-1);
+        }
     }
 }
