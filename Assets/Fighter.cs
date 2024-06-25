@@ -48,6 +48,9 @@ public class Fighter : MonoBehaviour
      * Hurtboxes
      */
     public GameObject Hurtbox;
+    
+    // Hurtbox transforms
+    private Vector3 hurtBoxStartPosition;
 
     /**
      * If more than 0 then character cannot move
@@ -68,8 +71,13 @@ public class Fighter : MonoBehaviour
     private void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
+        spr.sprite = StandingSprite;
         buffer = new Queue<BufferedInput>();
+
+        //Hitbox.GetComponent<SpriteRenderer>().enabled = false;
+        //Hurtbox.GetComponent<SpriteRenderer>().enabled = false;
         
+        hurtBoxStartPosition = Hurtbox.transform.localPosition;
         Hurtbox.SetActive(false);
         
         // Register Moves
@@ -120,7 +128,7 @@ public class Fighter : MonoBehaviour
         DragonJaw.hurtFrames = 1;
         DragonJaw.coolDownFrames = 1;
         DragonJaw.sprites = DragonJawSprites;
-        DragonJaw.frameInterval = 6;
+        DragonJaw.frameInterval = 4;
         moves.Add(DragonJaw);
         
         //moves.Add(Paper);
@@ -144,7 +152,6 @@ public class Fighter : MonoBehaviour
 
     public void UseAttack(FighterMove move)
     {
-        currentAttack = move;
         
         // Cannot attack while pushed
         if (pushFrames > 0)
@@ -153,10 +160,11 @@ public class Fighter : MonoBehaviour
         }
         
         // Grab the correct hurtbox and make it active
+        currentAttack = move;
         rockpunch = true; // ahhh
         currentSpriteIndex = 0;
         stillFrames = 5;
-        //Hurtbox.SetActive(true);
+        Hurtbox.SetActive(true);
     }
 
     public void FlushBuffer()
@@ -203,7 +211,6 @@ public class Fighter : MonoBehaviour
             transform.position += new Vector3(xSpeed * 0.025f,0,0);
             pushFrames--;
             xSpeed = 0;
-            return;
         }
         
         // Hurtbox should not exist while the player can move
@@ -311,7 +318,7 @@ public class Fighter : MonoBehaviour
         side = _side;
         if (side == 0)
         {
-            Hurtbox.transform.localPosition = new Vector3(0.6f,0.3f,-1);
+            Hurtbox.transform.localPosition = hurtBoxStartPosition;
             spr.flipX = false;
             return;
         }
@@ -319,7 +326,7 @@ public class Fighter : MonoBehaviour
         if (side == 1)
         {
             spr.flipX = true;
-            Hurtbox.transform.localPosition = new Vector3(-0.6f,0.3f,-1);
+            Hurtbox.transform.localPosition = new Vector3(-hurtBoxStartPosition.x,hurtBoxStartPosition.y,-hurtBoxStartPosition.z);
         }
     }
 }

@@ -39,8 +39,8 @@ public class Hitbox : MonoBehaviour
                 {
                     // Check the team
                     Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
-                    fighter.pushFrames = 2;
-                    parent.pushFrames = 1;
+                    //fighter.pushFrames = 2;
+                    //parent.pushFrames = 1;
                     //canBePushedThisFrame = false;
                 }
                 
