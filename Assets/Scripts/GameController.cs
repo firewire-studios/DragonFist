@@ -98,7 +98,7 @@ public class GameController : MonoBehaviour
                 continue;
             }
             
-            if (fighter.buffer.Peek().frames >= 30)
+            if (fighter.buffer.Peek().frames >= 8)
             {
                 //Debug.Log($"Dequeued {fighter.buffer.Peek().action}");
                 fighter.buffer.Dequeue();
@@ -129,6 +129,7 @@ public class GameController : MonoBehaviour
                         {
                             if (fighterMove.Actions[index] != bufferedInput.action)
                             {
+                                break;
                                // Debug.Log($"Move disallowed as {fighterMove.Actions[index]} does not match {bufferedInput.action}" );
                             }
                         }
@@ -164,16 +165,14 @@ public class GameController : MonoBehaviour
 
             }
 
-            if (selectedMove != null)
+            if (selectedMove != null && fighter.currentAttack == null)
             {
                 Debug.Log($"Used Move {selectedMove.MoveName}");
                 fighter.FlushBuffer();
 
-                fighter.stillFrames = 5;
-                fighter.ScissorAttack();
+                fighter.UseAttack(selectedMove);
             }
             
-
         }
         
         
@@ -191,11 +190,13 @@ public class GameController : MonoBehaviour
                 if (button == GamepadButton.DpadRight)
                 {
                     _players[team].xSpeed = 1;
+                    _players[team].HandleButtonPressed(button);
                 }
                 
                 if (button == GamepadButton.DpadLeft)
                 {
                     _players[team].xSpeed = -1;
+                    _players[team].HandleButtonPressed(button);
                 }
                 
             }

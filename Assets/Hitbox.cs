@@ -7,10 +7,12 @@ public class Hitbox : MonoBehaviour
 {
     private BoxCollider2D _collider2D;
     public bool canBePushedThisFrame = true;
+    public Fighter parent;
 
     private void Awake()
     {
         _collider2D = GetComponent<BoxCollider2D>();
+        parent = GetComponentInParent<Fighter>();
     }
 
     // Start is called before the first frame update
@@ -37,8 +39,9 @@ public class Hitbox : MonoBehaviour
                 {
                     // Check the team
                     Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
-                    fighter.pushFrames = 1;
-                    canBePushedThisFrame = false;
+                    fighter.pushFrames = 2;
+                    parent.pushFrames = 1;
+                    //canBePushedThisFrame = false;
                 }
                 
             }

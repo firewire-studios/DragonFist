@@ -1,11 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
 public class Fighter : MonoBehaviour
 {
+    public Sprite StandingSprite;
+    [SerializeField] public List<Sprite> WalkSprites;
+    [SerializeField] public List<Sprite> WalkBackSprites;
+    
+    [SerializeField] public List<Sprite> RockPunchSprites;
+    [SerializeField] public List<Sprite> DragonJawSprites;
+    
+    /*
+     * Temp
+     */
+
+    public bool rockpunch = false;
+
+    public FighterMove currentAttack = null;
+    
+    //===========
+    
+    private int currentSpriteIndex = 0;
+    private int frameInterval = 5;
+    private int currentFrame = 0;
+    
+    public SpriteRenderer spr;
+    
     public int health = 100;
     
     public int xSpeed = 0;
@@ -43,6 +67,7 @@ public class Fighter : MonoBehaviour
 
     private void Awake()
     {
+        spr = GetComponent<SpriteRenderer>();
         buffer = new Queue<BufferedInput>();
         
         Hurtbox.SetActive(false);
@@ -78,14 +103,32 @@ public class Fighter : MonoBehaviour
                 1
             );
         
+        // Special Moves
+        FighterMove DragonJaw = new FighterMove("DragonJaw",
+            new List<Action>() {Action.Backward,Action.Rock},
+            5
+        );
         
+        // Configure Frames
+        Rock.idleFrames = 1;
+        Rock.hurtFrames = 1;
+        Rock.coolDownFrames = 1;
+        Rock.sprites = RockPunchSprites;
         moves.Add(Rock);
-        moves.Add(Paper);
-        moves.Add(Scissors);
+
+        DragonJaw.idleFrames = 1;
+        DragonJaw.hurtFrames = 1;
+        DragonJaw.coolDownFrames = 1;
+        DragonJaw.sprites = DragonJawSprites;
+        DragonJaw.frameInterval = 6;
+        moves.Add(DragonJaw);
         
-        moves.Add(Fireball);
-        moves.Add(Doomfist);
-        
+        //moves.Add(Paper);
+        //moves.Add(Scissors);
+
+        //moves.Add(Fireball);
+        //moves.Add(Doomfist);
+
     }
 
     // Start is called before the first frame update
@@ -99,8 +142,10 @@ public class Fighter : MonoBehaviour
         
     }
 
-    public void ScissorAttack()
+    public void UseAttack(FighterMove move)
     {
+        currentAttack = move;
+        
         // Cannot attack while pushed
         if (pushFrames > 0)
         {
@@ -108,7 +153,10 @@ public class Fighter : MonoBehaviour
         }
         
         // Grab the correct hurtbox and make it active
-        Hurtbox.SetActive(true);
+        rockpunch = true; // ahhh
+        currentSpriteIndex = 0;
+        stillFrames = 5;
+        //Hurtbox.SetActive(true);
     }
 
     public void FlushBuffer()
@@ -120,6 +168,25 @@ public class Fighter : MonoBehaviour
     {
 
         healthbar.SetHealth(health);
+
+        if (currentAttack != null)
+        {
+            if (currentFrame >= currentAttack.frameInterval)
+            {
+                spr.sprite = currentAttack.sprites[currentSpriteIndex];
+                currentSpriteIndex = currentSpriteIndex + 1 >= currentAttack.sprites.Count?  0: currentSpriteIndex + 1;
+                currentFrame = 0;
+
+                if (currentSpriteIndex == 0)
+                {
+                    currentAttack = null;
+                }
+            }
+            currentFrame++;
+
+            return;
+        }
+        
 
         if (stillFrames > 0)
         {
@@ -133,12 +200,53 @@ public class Fighter : MonoBehaviour
             // Move backwards
 
             xSpeed = side == 0 ? -1 : 1;
+            transform.position += new Vector3(xSpeed * 0.025f,0,0);
             pushFrames--;
+            xSpeed = 0;
+            return;
         }
         
+        // Hurtbox should not exist while the player can move
         Hurtbox.SetActive(false);
         transform.position += new Vector3(xSpeed * 0.2f,0,0);
+
+        if (xSpeed != 0)
+        {
+            // Get walking direction
+            int direction = side == 0 ? xSpeed : -xSpeed;
+
+            if (direction == 1)
+            {
+                if (currentFrame >= frameInterval)
+                {
+                    spr.sprite = WalkSprites[currentSpriteIndex];
+                    currentSpriteIndex = currentSpriteIndex + 1 >= WalkSprites.Count?  0: currentSpriteIndex + 1;
+                    currentFrame = 0;
+                }
+            }
+            
+            if (direction == -1)
+            {
+                if (currentFrame >= frameInterval)
+                {
+                    spr.sprite = WalkBackSprites[currentSpriteIndex];
+                    currentSpriteIndex = currentSpriteIndex + 1 >= WalkBackSprites.Count?  0: currentSpriteIndex + 1;
+                    currentFrame = 0;
+                }
+            }
+            
+        }
+        else
+        {
+            spr.sprite = StandingSprite;
+        }
+        
+        
+        
+
         xSpeed = 0;
+        currentFrame++;
+
     }
     
     public void HandleButtonPressed(GamepadButton button)
@@ -150,13 +258,14 @@ public class Fighter : MonoBehaviour
             return;
         }
         
-        buffer.Enqueue(new BufferedInput(_action));
         //Debug.Log($"Queued {_action}");
 
-        if (buffer.Peek().action == _action)
+        if (buffer.Count > 0 && buffer.ToArray()[buffer.Count -1].action == _action)
         {
-            
+            return;
         }
+        
+        buffer.Enqueue(new BufferedInput(_action));
     }
 
     public Action MapGamepadButtonToAction(GamepadButton  button)
@@ -164,8 +273,8 @@ public class Fighter : MonoBehaviour
         switch (button)
         {
             // Switch if facing other direction todo:
-            case GamepadButton.DpadLeft: return Action.Backward;
-            case GamepadButton.DpadRight: return Action.Forward;
+            case GamepadButton.DpadLeft: return side == 0? Action.Backward : Action.Forward;
+            case GamepadButton.DpadRight: return side == 0? Action.Forward : Action.Backward;
             
             case GamepadButton.DpadDown: return Action.Down;
             
@@ -203,11 +312,13 @@ public class Fighter : MonoBehaviour
         if (side == 0)
         {
             Hurtbox.transform.localPosition = new Vector3(0.6f,0.3f,-1);
+            spr.flipX = false;
             return;
         }
 
         if (side == 1)
         {
+            spr.flipX = true;
             Hurtbox.transform.localPosition = new Vector3(-0.6f,0.3f,-1);
         }
     }

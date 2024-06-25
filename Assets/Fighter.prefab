@@ -27,9 +27,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 210797064366595313}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.99, y: 0.12832306, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1562503733948368011}
   - {fileID: 7436922502977347293}
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 1936157825, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,12 +100,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6c79f0380cd491f889bdae0811d2f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StandingSprite: {fileID: 1936157825, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  WalkSprites:
+  - {fileID: 1921757584, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 1165502595, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 2104488583, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -843688583, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 1042971219, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 1698839644, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  WalkBackSprites:
+  - {fileID: 1579343527, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -496824307, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 438824378, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -1103980101, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 1736064434, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -1136931025, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  RockPunchSprites:
+  - {fileID: 464996883, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -2104364539, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 464996883, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  DragonJawSprites:
+  - {fileID: 691523263, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -74572644, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 691523263, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  rockpunch: 0
+  spr: {fileID: 0}
   health: 100
   xSpeed: 0
   healthbar: {fileID: 0}
+  side: 0
   Hitbox: {fileID: 6619322442474192007}
   Hurtbox: {fileID: 4849738603917375610}
   stillFrames: 0
+  pushFrames: 0
   team: 0
 --- !u!114 &8939008939595930857
 MonoBehaviour:
@@ -137,7 +164,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7436922502977347293
 Transform:
   m_ObjectHideFlags: 0
@@ -280,7 +307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1562503733948368011
 Transform:
   m_ObjectHideFlags: 0
@@ -289,8 +316,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6619322442474192007}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.076, z: -1}
+  m_LocalScale: {x: 0.55, y: 1.0725, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1956446501810642635}
@@ -405,3 +432,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5eb2389fd606146cc9b1d7f21d3418bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBePushedThisFrame: 1
+  parent: {fileID: 0}
