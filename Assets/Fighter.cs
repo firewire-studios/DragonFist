@@ -13,6 +13,7 @@ public class Fighter : MonoBehaviour
     public List<FighterMove> moves;
 
     public HealthBar healthbar;
+    public int side = 0;
     
     /**
      *Hitbox
@@ -28,6 +29,11 @@ public class Fighter : MonoBehaviour
      * If more than 0 then character cannot move
      */
     public int stillFrames = 0;
+
+    /**
+     * if more than 0 
+     */
+    public int pushFrames = 0;
     
     /**
      * Set in editor
@@ -95,6 +101,12 @@ public class Fighter : MonoBehaviour
 
     public void ScissorAttack()
     {
+        // Cannot attack while pushed
+        if (pushFrames > 0)
+        {
+            return;
+        }
+        
         // Grab the correct hurtbox and make it active
         Hurtbox.SetActive(true);
     }
@@ -114,6 +126,14 @@ public class Fighter : MonoBehaviour
 
             stillFrames--;
             return;
+        }
+
+        if (pushFrames > 0)
+        {
+            // Move backwards
+
+            xSpeed = side == 0 ? -1 : 1;
+            pushFrames--;
         }
         
         Hurtbox.SetActive(false);
@@ -177,8 +197,9 @@ public class Fighter : MonoBehaviour
      * 0 = left
      * 1 = right
      */
-    public void SetSide(int side)
+    public void SetSide(int _side)
     {
+        side = _side;
         if (side == 0)
         {
             Hurtbox.transform.localPosition = new Vector3(0.6f,0.3f,-1);

@@ -3,17 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HurtBox : MonoBehaviour
+public class Hitbox : MonoBehaviour
 {
     private BoxCollider2D _collider2D;
-    private int team;
-    private bool active;
+    public bool canBePushedThisFrame = true;
 
     private void Awake()
     {
         _collider2D = GetComponent<BoxCollider2D>();
-
-        team = GetComponentInParent<Fighter>().team;
     }
 
     // Start is called before the first frame update
@@ -22,18 +19,10 @@ public class HurtBox : MonoBehaviour
         
     }
 
-    private void OnEnable()
-    {
-        active = true;
-    }
-
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (!active)
-        {
-            return;
-        }
+        canBePushedThisFrame = true;
         ContactFilter2D filter = new ContactFilter2D().NoFilter();
 
         List<Collider2D> results = new List<Collider2D>();
@@ -43,17 +32,15 @@ public class HurtBox : MonoBehaviour
         {
             if (collider.tag == "Hitbox")
             {
-                // Check the team
-                Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
-                if (fighter.team != team)
+                // can the collider be pushed?
+                if (collider.gameObject.GetComponent<Hitbox>().canBePushedThisFrame)
                 {
-                    fighter.health -= 10;
-                    fighter.pushFrames = 6;
-                    
-                    active = false;
-                    return;
+                    // Check the team
+                    Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
+                    fighter.pushFrames = 1;
+                    canBePushedThisFrame = false;
                 }
-
+                
             }
             
             //Debug.Log(collider.gameObject.name);
