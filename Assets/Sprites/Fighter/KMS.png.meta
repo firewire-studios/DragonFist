@@ -609,12 +609,12 @@ TextureImporter:
       name: KMS_38
       rect:
         serializedVersion: 2
-        x: 1889
+        x: 1883
         y: 2080
         width: 377
         height: 332
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.36870027, y: 0.57831323}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -651,12 +651,12 @@ TextureImporter:
       name: KMS_40
       rect:
         serializedVersion: 2
-        x: 503
+        x: 497
         y: 2096
         width: 293
         height: 274
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.47440273, y: 0.7007299}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -676,8 +676,8 @@ TextureImporter:
         y: 2098
         width: 403
         height: 272
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.34491315, y: 0.7058824}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -693,12 +693,12 @@ TextureImporter:
       name: KMS_42
       rect:
         serializedVersion: 2
-        x: 1501
+        x: 1507
         y: 2077
         width: 315
         height: 275
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.44126984, y: 0.6981818}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -739,8 +739,8 @@ TextureImporter:
         y: 2080
         width: 376
         height: 250
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.36968085, y: 0.768}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -760,8 +760,8 @@ TextureImporter:
         y: 2085
         width: 547
         height: 219
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.25411335, y: 0.8767123}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

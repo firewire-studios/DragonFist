@@ -9,11 +9,13 @@ public class HurtBox : MonoBehaviour
     private int team;
     public bool active;
 
+    private Fighter parentFighter;
     private void Awake()
     {
         _collider2D = GetComponent<BoxCollider2D>();
 
-        team = GetComponentInParent<Fighter>().team;
+        parentFighter = GetComponentInParent<Fighter>();
+        team = parentFighter.team;
     }
 
     // Start is called before the first frame update
@@ -48,7 +50,7 @@ public class HurtBox : MonoBehaviour
                 if (fighter.team != team)
                 {
                     fighter.health -= 10;
-                    fighter.pushFrames = 6;
+                    fighter.pushFrames = parentFighter.currentAttack.pushFrames;
                     fighter.currentAttack = null;
                     fighter.Stun();
                     

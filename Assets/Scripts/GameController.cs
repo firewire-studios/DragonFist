@@ -164,11 +164,19 @@ public class GameController : MonoBehaviour
             FighterMove selectedMove = null;
             if (allowedMoves.Count > 0)
             {
+                // remove any invalid moves (standing)
+                allowedMoves.RemoveAll(move =>
+                    (move.standingMove && fighter.crouching) || (!move.standingMove && !fighter.crouching));
+                
                 //Debug.Log($"Allowed Moves {allowedMoves.Count}");
                 
                 // Sort the list of allowed moves
-                allowedMoves.Sort((x,y) => x.Priority.CompareTo(y.Priority));
-                selectedMove = allowedMoves[0];
+
+                if (allowedMoves.Count > 0)
+                {
+                    allowedMoves.Sort((x, y) => x.Priority.CompareTo(y.Priority));
+                    selectedMove = allowedMoves[0];
+                }
 
             }
 
@@ -208,17 +216,37 @@ public class GameController : MonoBehaviour
                 
                 if (button == GamepadButton.DpadDown)
                 {
-                    _players[team].crouching = true;
+                    //_players[team].crouching = true;
+                    
+                    if (_players[team].currentAttack != null && _players[team].currentAttack.standingMove )
+                    {
+                        // If in a crouch attack do not allow crouch
+                    }
+                    else
+                    {
+                        _players[team].crouching = true;
+
+                    }
+                    
                     //_players[team].HandleButtonPressed(button);
                 }
                 
             }
 
-            if (gp[button].wasReleasedThisFrame)
+            if (gp[button].wasReleasedThisFrame || !gp[button].isPressed)
             {
                 if (button == GamepadButton.DpadDown)
                 {
-                    _players[team].crouching = false;
+                    if (_players[team].currentAttack != null && !_players[team].currentAttack.standingMove )
+                    {
+                        // If in a crouch attack do not allow standing up
+                    }
+                    else
+                    {
+                        _players[team].crouching = false;
+
+                    }
+                    
                     //_players[team].HandleButtonPressed(button);
                 }
             }

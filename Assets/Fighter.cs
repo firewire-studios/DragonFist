@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Serialization;
 
 public class Fighter : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class Fighter : MonoBehaviour
     
     [SerializeField] public List<Sprite> RockPunchSprites;
     [SerializeField] public List<Sprite> DragonJawSprites;
+    
+    // Paper kick
+    [SerializeField] public List<Sprite> DragonTailSprites;
+    
     
     /*
      * Temp
@@ -51,10 +56,14 @@ public class Fighter : MonoBehaviour
     /**
      * Hurtboxes
      */
-    public GameObject Hurtbox;
+    [FormerlySerializedAs("Hurtbox")] public GameObject JabHurtbox;
+
+    public GameObject PaperKickHurtbox;
     
     // Hurtbox transforms
     private Vector3 hurtBoxStartPosition;
+    
+    private Vector3 PaperHurtBoxStartPosition;
     
     // Hitbox transforms
     private Vector3 hitBoxStandingScale =new Vector3(0.879074633f,1.41376948f,1.31819999f) ;
@@ -90,8 +99,11 @@ public class Fighter : MonoBehaviour
         //Hitbox.GetComponent<SpriteRenderer>().enabled = false;
         //Hurtbox.GetComponent<SpriteRenderer>().enabled = false;
         
-        hurtBoxStartPosition = Hurtbox.transform.localPosition;
-        Hurtbox.SetActive(false);
+        hurtBoxStartPosition = JabHurtbox.transform.localPosition;
+        JabHurtbox.SetActive(false);
+
+        PaperHurtBoxStartPosition = PaperKickHurtbox.transform.localPosition;
+        PaperKickHurtbox.SetActive(false);
         
         // Register Moves
         moves = new List<FighterMove>();
@@ -124,6 +136,22 @@ public class Fighter : MonoBehaviour
                 1
             );
         
+        // Crouching moves
+        FighterMove DragonTail = new FighterMove("DragonTail",
+            new List<Action>() {Action.Paper},
+            5
+        );
+
+        DragonTail.idleFrames = 1;
+        DragonTail.hurtFrames = 2;
+        DragonTail.coolDownFrames = 1;
+        DragonTail.standingMove = false;
+        DragonTail.sprites = DragonTailSprites;
+        DragonTail.hurtbox = PaperKickHurtbox;
+        DragonTail.pushFrames = 20;
+        DragonTail.frameInterval = 6;
+        moves.Add(DragonTail);
+        
         // Special Moves
         FighterMove DragonJaw = new FighterMove("DragonJaw",
             new List<Action>() {Action.Backward,Action.Rock},
@@ -135,6 +163,7 @@ public class Fighter : MonoBehaviour
         Rock.hurtFrames = 2;
         Rock.coolDownFrames = 1;
         Rock.sprites = RockPunchSprites;
+        Rock.hurtbox = JabHurtbox;
         //Rock.frameInterval = 30;
         moves.Add(Rock);
 
@@ -143,6 +172,7 @@ public class Fighter : MonoBehaviour
         DragonJaw.coolDownFrames = 1;
         DragonJaw.sprites = DragonJawSprites;
         DragonJaw.frameInterval = 4;
+        DragonJaw.hurtbox = JabHurtbox;
         moves.Add(DragonJaw);
         
         //moves.Add(Paper);
@@ -181,16 +211,16 @@ public class Fighter : MonoBehaviour
         
     }
 
-    public void ActivateHurtBox()
+    public void ActivateHurtBox(GameObject _Hurtbox)
     {
-        Hurtbox.SetActive(true);
-        Hurtbox.GetComponent<HurtBox>().active = true;
+        _Hurtbox.SetActive(true);
+        _Hurtbox.GetComponent<HurtBox>().active = true;
     }
 
-    public void DeactivateHurtBox()
+    public void DeactivateHurtBox(GameObject _Hurtbox)
     {
-        Hurtbox.SetActive(false);
-        Hurtbox.GetComponent<HurtBox>().active = false;
+        _Hurtbox.SetActive(false);
+        _Hurtbox.GetComponent<HurtBox>().active = false;
     }
 
     public void FlushBuffer()
@@ -257,12 +287,12 @@ public class Fighter : MonoBehaviour
                 if (currentAttack.IsHurtFrame(currentSpriteIndex))
                 {
                     Debug.Log("Activeate Hurt Box");
-                    ActivateHurtBox();
+                    ActivateHurtBox(currentAttack.hurtbox);
                 }
 
                 if (currentAttack.IsCooldownFrame(currentSpriteIndex))
                 {
-                    DeactivateHurtBox();
+                    DeactivateHurtBox(currentAttack.hurtbox);
                 }
 
                 currentSpriteIndex++; ///AHHHHHHHH;
@@ -299,7 +329,7 @@ public class Fighter : MonoBehaviour
         }
         
         // Hurtbox should not exist while the player can move
-        Hurtbox.SetActive(false);
+        JabHurtbox.SetActive(false);
         transform.position += new Vector3(xSpeed * 0.2f,0,0);
 
         if (xSpeed != 0)
@@ -403,7 +433,8 @@ public class Fighter : MonoBehaviour
         side = _side;
         if (side == 0)
         {
-            Hurtbox.transform.localPosition = hurtBoxStartPosition;
+            JabHurtbox.transform.localPosition = hurtBoxStartPosition;
+            PaperKickHurtbox.transform.localPosition =PaperHurtBoxStartPosition;
             spr.flipX = false;
             return;
         }
@@ -411,7 +442,8 @@ public class Fighter : MonoBehaviour
         if (side == 1)
         {
             spr.flipX = true;
-            Hurtbox.transform.localPosition = new Vector3(-hurtBoxStartPosition.x,hurtBoxStartPosition.y,-hurtBoxStartPosition.z);
+            JabHurtbox.transform.localPosition = new Vector3(-hurtBoxStartPosition.x,hurtBoxStartPosition.y,-hurtBoxStartPosition.z);
+            PaperKickHurtbox.transform.localPosition = new Vector3(-PaperHurtBoxStartPosition.x,PaperHurtBoxStartPosition.y,-PaperHurtBoxStartPosition.z);
         }
     }
 }

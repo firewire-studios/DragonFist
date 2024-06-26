@@ -15,6 +15,9 @@ public class FighterMove
     public int hurtFrames = 0;
     public int coolDownFrames = 0;
     public int frameInterval = 3;
+    public bool standingMove = true;
+    public GameObject hurtbox = null;
+    public int pushFrames = 6;
 
     public List<Sprite> sprites;
     
