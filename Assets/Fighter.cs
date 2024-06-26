@@ -21,7 +21,10 @@ public class Fighter : MonoBehaviour
     
     
     [SerializeField] public List<Sprite> RockPunchSprites;
-    [SerializeField] public List<Sprite> DragonJawSprites;
+    [SerializeField] public List<Sprite> DragonJawSprites; // rock type
+    
+    [SerializeField] public List<Sprite> PaperPunchSprites; // rock type
+
     
     // Paper kick
     [SerializeField] public List<Sprite> DragonTailSprites;
@@ -66,11 +69,13 @@ public class Fighter : MonoBehaviour
     [FormerlySerializedAs("Hurtbox")] public GameObject JabHurtbox;
 
     public GameObject PaperKickHurtbox;
+    public GameObject UppercutHurtBox;
     
     // Hurtbox transforms
     private Vector3 hurtBoxStartPosition;
     
     private Vector3 PaperHurtBoxStartPosition;
+    private Vector3 UppercutHurtBoxStartPosition;
     
     // Hitbox transforms
     private Vector3 hitBoxStandingScale =new Vector3(0.879074633f,1.41376948f,1.31819999f) ;
@@ -78,6 +83,9 @@ public class Fighter : MonoBehaviour
     
     private Vector3 hitBoxCrouchingScale = new Vector3(0.879074633f,1.04654276f,1.31819999f);
     private Vector3 hitBoxCrouchingPosition = new Vector3(0,-0.210999995f,-1);
+
+    //private Vector3 hitBoxUppercutScale = new Vector3(0.52f,0.494f,1.2f);
+    //private Vector3 hitBoxUppercutPosition = new Vector3(0.6f,0.37f,-1f);
 
     public bool stunned = false;
     public bool launched = false;
@@ -112,6 +120,9 @@ public class Fighter : MonoBehaviour
 
         PaperHurtBoxStartPosition = PaperKickHurtbox.transform.localPosition;
         PaperKickHurtbox.SetActive(false);
+        
+        UppercutHurtBoxStartPosition = UppercutHurtBox.transform.localPosition;
+        UppercutHurtBox.SetActive(false);
         
         // Register Moves
         moves = new List<FighterMove>();
@@ -158,6 +169,7 @@ public class Fighter : MonoBehaviour
         DragonTail.hurtbox = PaperKickHurtbox;
         DragonTail.pushFrames = 20;
         DragonTail.frameInterval = 6;
+        DragonTail.type = FighterMove.MoveType.Paper;
         moves.Add(DragonTail);
         
         // Special Moves
@@ -174,13 +186,22 @@ public class Fighter : MonoBehaviour
         Rock.hurtbox = JabHurtbox;
         //Rock.frameInterval = 30;
         moves.Add(Rock);
+        
+        Paper.idleFrames = 1;
+        Paper.hurtFrames = 2;
+        Paper.coolDownFrames = 1;
+        Paper.sprites = PaperPunchSprites;
+        Paper.hurtbox = JabHurtbox;
+        Paper.type = FighterMove.MoveType.Paper;
+        Paper.frameInterval = 1;
+        moves.Add(Paper);
 
         DragonJaw.idleFrames = 1;
         DragonJaw.hurtFrames = 1;
         DragonJaw.coolDownFrames = 1;
         DragonJaw.sprites = DragonJawSprites;
         DragonJaw.frameInterval = 4;
-        DragonJaw.hurtbox = JabHurtbox;
+        DragonJaw.hurtbox = UppercutHurtBox;
         DragonJaw.shouldLaunch = true;
         moves.Add(DragonJaw);
         
@@ -263,6 +284,7 @@ public class Fighter : MonoBehaviour
             launchedTimes++;
         }
 
+        crouching = false;
         blocking = false;
         stunned = false;
         launched = true;
@@ -314,9 +336,13 @@ public class Fighter : MonoBehaviour
 
         if (launched)
         {
+            Hitbox.transform.localPosition = hitBoxStandingPosition;
+            Hitbox.transform.localScale = hitBoxStandingScale;
+            
             if (currentSpriteIndex == LaunchSprites.Count)
             {
                 launched = false;
+                launchedTimes = 0;
                 //spr.sprite = StandingSprite;
                 currentSpriteIndex = 0;
                 return;
@@ -530,6 +556,7 @@ public class Fighter : MonoBehaviour
         {
             JabHurtbox.transform.localPosition = hurtBoxStartPosition;
             PaperKickHurtbox.transform.localPosition =PaperHurtBoxStartPosition;
+            UppercutHurtBox.transform.localPosition =UppercutHurtBoxStartPosition;
             spr.flipX = false;
             return;
         }
@@ -539,6 +566,7 @@ public class Fighter : MonoBehaviour
             spr.flipX = true;
             JabHurtbox.transform.localPosition = new Vector3(-hurtBoxStartPosition.x,hurtBoxStartPosition.y,-hurtBoxStartPosition.z);
             PaperKickHurtbox.transform.localPosition = new Vector3(-PaperHurtBoxStartPosition.x,PaperHurtBoxStartPosition.y,-PaperHurtBoxStartPosition.z);
+            UppercutHurtBox.transform.localPosition = new Vector3(-UppercutHurtBoxStartPosition.x,UppercutHurtBoxStartPosition.y,-UppercutHurtBoxStartPosition.z);
         }
     }
 }

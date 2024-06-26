@@ -47,6 +47,7 @@ public class HurtBox : MonoBehaviour
             {
                 // Check the team
                 Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
+                int dmg = 10;
                 if (fighter.team != team)
                 {
                     if (fighter.launched)
@@ -54,6 +55,8 @@ public class HurtBox : MonoBehaviour
                         Debug.Log("Launch Again");
                         active = false;
                         fighter.Launch();
+                        fighter.pushFrames = parentFighter.currentAttack.pushFrames;
+                        fighter.health -= dmg;
                         return;
                     }
                     
@@ -82,7 +85,24 @@ public class HurtBox : MonoBehaviour
                         
                     }
                     
-                    fighter.health -= 10;
+                    // If they are doing a move that you counter then launch them
+                    if (fighter.currentAttack != null)
+                    {
+                        
+                        
+                        if (parentFighter.currentAttack.Beats(fighter.currentAttack))
+                        {
+                            fighter.Launch();
+                            fighter.health -= dmg;
+                            fighter.pushFrames = parentFighter.currentAttack.pushFrames;
+                           // fighter.currentAttack = null;
+                            active = false;
+                            return;
+                        }
+                    }
+
+                    
+                    fighter.health -= dmg;
                     fighter.pushFrames = parentFighter.currentAttack.pushFrames;
                     fighter.currentAttack = null;
 

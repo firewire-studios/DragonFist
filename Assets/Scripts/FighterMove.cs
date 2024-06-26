@@ -7,6 +7,7 @@ public class FighterMove
     public string MoveName;
     public List<Fighter.Action> Actions;
     public int Priority;
+    public MoveType type = MoveType.Rock;
 
     
     // The following are animation frames no fixedUpdateFrames
@@ -52,5 +53,43 @@ public class FighterMove
     public bool IsCooldownFrame(int frame)
     {
         return frame >= (idleFrames + hurtFrames) && frame < (idleFrames + hurtFrames + coolDownFrames);
+    }
+
+    public enum MoveType
+    {
+        Rock,
+        Paper,
+        Scissor
+    }
+
+    public bool Beats(FighterMove move)
+    {
+        MoveType type1 = type;
+        MoveType type2 = move.type;
+
+
+        if (type1 == type2)
+        {
+            return false;
+        }
+
+        if (type1 == MoveType.Rock && type2 == MoveType.Scissor)
+        {
+            return true;
+        }
+        
+        if (type1 == MoveType.Scissor && type2 == MoveType.Paper)
+        {
+            return true;
+        }
+        
+        if (type1 == MoveType.Paper && type2 == MoveType.Rock)
+        {
+            return true;
+        }
+        
+
+        return false;
+
     }
 }
