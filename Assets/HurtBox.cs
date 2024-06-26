@@ -7,7 +7,7 @@ public class HurtBox : MonoBehaviour
 {
     private BoxCollider2D _collider2D;
     private int team;
-    private bool active;
+    public bool active;
 
     private void Awake()
     {
@@ -49,6 +49,8 @@ public class HurtBox : MonoBehaviour
                 {
                     fighter.health -= 10;
                     fighter.pushFrames = 6;
+                    fighter.currentAttack = null;
+                    fighter.Stun();
                     
                     active = false;
                     return;

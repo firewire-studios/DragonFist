@@ -10,7 +10,8 @@ using UnityEngine.InputSystem.LowLevel;
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
-    
+    public bool debugEnabled = true;
+
     // Players
     public Fighter p1;
     public Fighter p2;
@@ -64,6 +65,12 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Toggle debug
+        if (Input.GetKeyDown(KeyCode.Tilde))
+        {
+            debugEnabled = !debugEnabled;
+        }
+        
         currentTimeStep += Time.deltaTime * 1000;
         if (currentTimeStep >= FixedTimeStep)
         {
@@ -165,7 +172,7 @@ public class GameController : MonoBehaviour
 
             }
 
-            if (selectedMove != null && fighter.currentAttack == null)
+            if (selectedMove != null && fighter.currentAttack == null && !fighter.stunned)
             {
                 Debug.Log($"Used Move {selectedMove.MoveName}");
                 fighter.FlushBuffer();
@@ -199,6 +206,21 @@ public class GameController : MonoBehaviour
                     _players[team].HandleButtonPressed(button);
                 }
                 
+                if (button == GamepadButton.DpadDown)
+                {
+                    _players[team].crouching = true;
+                    //_players[team].HandleButtonPressed(button);
+                }
+                
+            }
+
+            if (gp[button].wasReleasedThisFrame)
+            {
+                if (button == GamepadButton.DpadDown)
+                {
+                    _players[team].crouching = false;
+                    //_players[team].HandleButtonPressed(button);
+                }
             }
             
             if (gp[button].wasPressedThisFrame)

@@ -8,8 +8,11 @@ using UnityEngine.InputSystem.LowLevel;
 public class Fighter : MonoBehaviour
 {
     public Sprite StandingSprite;
+    public Sprite CrouchingSprite;
     [SerializeField] public List<Sprite> WalkSprites;
     [SerializeField] public List<Sprite> WalkBackSprites;
+    [SerializeField] public List<Sprite> StunSprites;
+    
     
     [SerializeField] public List<Sprite> RockPunchSprites;
     [SerializeField] public List<Sprite> DragonJawSprites;
@@ -31,7 +34,8 @@ public class Fighter : MonoBehaviour
     public SpriteRenderer spr;
     
     public int health = 100;
-    
+
+    public bool crouching = false;
     public int xSpeed = 0;
     public Queue<BufferedInput> buffer;
     public List<FighterMove> moves;
@@ -51,6 +55,15 @@ public class Fighter : MonoBehaviour
     
     // Hurtbox transforms
     private Vector3 hurtBoxStartPosition;
+    
+    // Hitbox transforms
+    private Vector3 hitBoxStandingScale =new Vector3(0.879074633f,1.41376948f,1.31819999f) ;
+    private Vector3 hitBoxStandingPosition =new Vector3(0,0f,-1);
+    
+    private Vector3 hitBoxCrouchingScale = new Vector3(0.879074633f,1.04654276f,1.31819999f);
+    private Vector3 hitBoxCrouchingPosition = new Vector3(0,-0.210999995f,-1);
+
+    public bool stunned = false;
 
     /**
      * If more than 0 then character cannot move
@@ -119,9 +132,10 @@ public class Fighter : MonoBehaviour
         
         // Configure Frames
         Rock.idleFrames = 1;
-        Rock.hurtFrames = 1;
+        Rock.hurtFrames = 2;
         Rock.coolDownFrames = 1;
         Rock.sprites = RockPunchSprites;
+        //Rock.frameInterval = 30;
         moves.Add(Rock);
 
         DragonJaw.idleFrames = 1;
@@ -164,31 +178,97 @@ public class Fighter : MonoBehaviour
         rockpunch = true; // ahhh
         currentSpriteIndex = 0;
         stillFrames = 5;
+        
+    }
+
+    public void ActivateHurtBox()
+    {
         Hurtbox.SetActive(true);
+        Hurtbox.GetComponent<HurtBox>().active = true;
+    }
+
+    public void DeactivateHurtBox()
+    {
+        Hurtbox.SetActive(false);
+        Hurtbox.GetComponent<HurtBox>().active = false;
     }
 
     public void FlushBuffer()
     {
         buffer.Clear();
     }
+
+    public void Stun()
+    {
+        stunned = true;
+        currentSpriteIndex = 0;
+    }
     
     public void FixedTimestepUpdate()
     {
 
         healthbar.SetHealth(health);
-
-        if (currentAttack != null)
+        
+        if (pushFrames > 0)
         {
-            if (currentFrame >= currentAttack.frameInterval)
+            // Move backwards
+
+            xSpeed = side == 0 ? -1 : 1;
+            transform.position += new Vector3(xSpeed * 0.025f,0,0);
+            pushFrames--;
+            xSpeed = 0;
+        }
+
+        if (stunned)
+        {
+            if (currentFrame >= 4) // todo
             {
-                spr.sprite = currentAttack.sprites[currentSpriteIndex];
-                currentSpriteIndex = currentSpriteIndex + 1 >= currentAttack.sprites.Count?  0: currentSpriteIndex + 1;
+                spr.sprite = StunSprites[currentSpriteIndex];
+                currentSpriteIndex = currentSpriteIndex + 1 >= StunSprites.Count?  0: currentSpriteIndex + 1;
                 currentFrame = 0;
 
                 if (currentSpriteIndex == 0)
                 {
-                    currentAttack = null;
+                    stunned = false;
                 }
+            }
+            currentFrame++;
+
+            return;
+        }
+        
+
+        // Animate current move
+        if (currentAttack != null)
+        {
+            if (currentFrame >= currentAttack.frameInterval)
+            {
+                // If has looped over
+                if (currentSpriteIndex == currentAttack.sprites.Count)
+                {
+                    currentSpriteIndex = 0;
+                    spr.sprite = StandingSprite;
+                    currentAttack = null;
+                    currentFrame++;
+                    return;
+                }
+                
+                spr.sprite = currentAttack.sprites[currentSpriteIndex];
+                if (currentAttack.IsHurtFrame(currentSpriteIndex))
+                {
+                    Debug.Log("Activeate Hurt Box");
+                    ActivateHurtBox();
+                }
+
+                if (currentAttack.IsCooldownFrame(currentSpriteIndex))
+                {
+                    DeactivateHurtBox();
+                }
+
+                currentSpriteIndex++; ///AHHHHHHHH;
+                currentFrame = 0;
+
+                
             }
             currentFrame++;
 
@@ -203,14 +283,19 @@ public class Fighter : MonoBehaviour
             return;
         }
 
-        if (pushFrames > 0)
-        {
-            // Move backwards
 
-            xSpeed = side == 0 ? -1 : 1;
-            transform.position += new Vector3(xSpeed * 0.025f,0,0);
-            pushFrames--;
-            xSpeed = 0;
+        if (crouching)
+        {
+            spr.sprite = CrouchingSprite;
+            Hitbox.transform.localPosition = hitBoxCrouchingPosition;
+            Hitbox.transform.localScale = hitBoxCrouchingScale;
+            currentFrame++;
+            return;
+        }
+        else
+        {
+            Hitbox.transform.localPosition = hitBoxStandingPosition;
+            Hitbox.transform.localScale = hitBoxStandingScale;
         }
         
         // Hurtbox should not exist while the player can move

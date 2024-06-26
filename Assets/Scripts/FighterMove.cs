@@ -34,4 +34,19 @@ public class FighterMove
     {
         sprites = _sprites;
     }
+
+    public bool IsIdleFrame(int frame)
+    {
+        return frame < idleFrames;
+    }
+
+    public bool IsHurtFrame(int frame)
+    {
+        return frame >= idleFrames && frame < (idleFrames + hurtFrames);
+    }
+
+    public bool IsCooldownFrame(int frame)
+    {
+        return frame >= (idleFrames + hurtFrames) && frame < (idleFrames + hurtFrames + coolDownFrames);
+    }
 }
