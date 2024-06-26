@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3e6414eaae40245c0a28f8fd5c1f8a95
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - spr1: {fileID: 977450421, guid: 165fa9f75243048e7b8d8aded46759ab, type: 3}
+  - spr2: {fileID: -1859287174, guid: 165fa9f75243048e7b8d8aded46759ab, type: 3}
+  - spr3: {fileID: 557279447, guid: 165fa9f75243048e7b8d8aded46759ab, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

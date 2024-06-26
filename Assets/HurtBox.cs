@@ -55,6 +55,7 @@ public class HurtBox : MonoBehaviour
                         fighter.pushFrames = parentFighter.currentAttack.pushFrames;
                         fighter.DeactivateHurtBox(fighter.currentAttack.hurtbox);
                         fighter.currentAttack = null;
+                        parentFighter.CounterBox.GetComponent<AppearAndFade>().Appear();
                         active = false;
                         return;
                     }
@@ -79,16 +80,18 @@ public class HurtBox : MonoBehaviour
                         return;
                     }
                     
+                    // If the attack is blocked
                     if (fighter.blocking && fighter.crouching)
                     {
-                        if (!parentFighter.currentAttack.standingMove)
+                        if (!parentFighter.currentAttack.standingMove) //check null todo:
                         {
-                            parentFighter.stillFrames = 40; // make var
+                            parentFighter.stillFrames = 10; // make var
                             parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
+                            parentFighter.currentAttack = null;
+                            parentFighter.Stun();
                         
                             return;
                         }
-                        
                         
                     }
                     
@@ -96,9 +99,11 @@ public class HurtBox : MonoBehaviour
                     {
                         if (parentFighter.currentAttack.standingMove)
                         {
-                            parentFighter.stillFrames = 40;
+                            parentFighter.stillFrames = 10;
                             parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
-                        
+                            parentFighter.currentAttack = null;
+                            parentFighter.Stun();
+
                             return;
                         }
                         
@@ -115,7 +120,8 @@ public class HurtBox : MonoBehaviour
                             fighter.health -= dmg;
                             fighter.pushFrames = parentFighter.currentAttack.pushFrames;
                            // fighter.currentAttack = null;
-                            active = false;
+                           parentFighter.CounterBox.GetComponent<AppearAndFade>().Appear();
+                           active = false;
                             return;
                         }
                     }

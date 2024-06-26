@@ -8,6 +8,9 @@ using UnityEngine.Serialization;
 
 public class Fighter : MonoBehaviour
 {
+    public GameObject CounterBox;
+    public MoveTypeIndicator MoveTypeIndicator;
+    
     public Sprite StandingSprite;
     public Sprite CrouchingSprite;
 
@@ -109,6 +112,7 @@ public class Fighter : MonoBehaviour
 
     private void Awake()
     {
+        MoveTypeIndicator = GetComponentInChildren<MoveTypeIndicator>();
         spr = GetComponent<SpriteRenderer>();
         spr.sprite = StandingSprite;
         buffer = new Queue<BufferedInput>();
@@ -248,6 +252,7 @@ public class Fighter : MonoBehaviour
         rockpunch = true; // ahhh
         currentSpriteIndex = 0;
         stillFrames = 5;
+        MoveTypeIndicator.Appear(move.type);
         
     }
 
