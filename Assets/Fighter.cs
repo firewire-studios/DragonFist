@@ -244,7 +244,17 @@ public class Fighter : MonoBehaviour
             // Move backwards
 
             xSpeed = side == 0 ? -1 : 1;
-            transform.position += new Vector3(xSpeed * 0.025f,0,0);
+            
+            Vector3 newPushPosition = transform.position + new Vector3(xSpeed * 0.025f,0,0);
+            if (newPushPosition.x <= 25 && newPushPosition.x >= -25)
+            {
+                if (GameController.GetDifferenceToPlayer(team,newPushPosition) < 15f)
+                {
+                    transform.position = newPushPosition;
+                }
+            
+            }
+            
             pushFrames--;
             xSpeed = 0;
         }
@@ -277,7 +287,7 @@ public class Fighter : MonoBehaviour
                 if (currentSpriteIndex == currentAttack.sprites.Count)
                 {
                     currentSpriteIndex = 0;
-                    spr.sprite = StandingSprite;
+                    //spr.sprite = StandingSprite;
                     currentAttack = null;
                     currentFrame++;
                     return;
@@ -330,7 +340,17 @@ public class Fighter : MonoBehaviour
         
         // Hurtbox should not exist while the player can move
         JabHurtbox.SetActive(false);
-        transform.position += new Vector3(xSpeed * 0.2f,0,0);
+        
+        // Only move if space
+        Vector3 newPosition = transform.position + new Vector3(xSpeed * 0.2f, 0, 0);
+        if (newPosition.x <= 25 && newPosition.x >= -25)
+        {
+            if (GameController.GetDifferenceToPlayer(team,newPosition) < 15f)
+            {
+                transform.position = newPosition;
+            }
+            
+        }
 
         if (xSpeed != 0)
         {

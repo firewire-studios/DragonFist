@@ -9,6 +9,10 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class GameController : MonoBehaviour
 {
+    private Camera cam;
+    private float maxCamx = 18;
+    public float playerDistance = 0;
+    
     public static GameController instance;
     public bool debugEnabled = true;
 
@@ -31,6 +35,7 @@ public class GameController : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            cam = Camera.main;
             return;
         }
     }
@@ -85,6 +90,27 @@ public class GameController : MonoBehaviour
     private void FixedTimeStepUpdate()
     {
         // Set player left and right positions
+
+        float p1x = p1.transform.position.x;
+        float p2x = p2.transform.position.x;
+        playerDistance = Mathf.Abs(p1x - p2x);
+
+        Vector3 Difference = p1.transform.position;
+        Difference.x = (((p2x - p1x) / 2) + p1x);
+        Difference.z = -10;
+        Difference.y = 0.43f;
+
+        if (Difference.x > 18)
+        {
+            Difference.x = 18;
+        }
+
+        if (Difference.x < -17.3f)
+        {
+            Difference.x = -17.3f;
+        }
+
+        cam.transform.position = Vector3.Lerp(cam.transform.position, Difference, 0.05f);
 
         if (p1.transform.position.x < p2.transform.position.x)
         {
@@ -193,6 +219,13 @@ public class GameController : MonoBehaviour
         
         _players[0].FixedTimestepUpdate();
         _players[1].FixedTimestepUpdate();
+    }
+
+    public static float GetDifferenceToPlayer(int _player, Vector3 newPosition)
+    {
+        Vector3 otherPlayerPosition = _player == 0 ? instance.p2.transform.position : instance.p1.transform.position;
+
+        return Mathf.Abs(otherPlayerPosition.x - newPosition.x) ;
     }
 
     private void PollInput(Gamepad gp, int team)

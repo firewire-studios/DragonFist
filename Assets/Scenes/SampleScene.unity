@@ -523,6 +523,18 @@ PrefabInstance:
       propertyPath: StandingSprite
       value: 
       objectReference: {fileID: 1936157825, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+    - target: {fileID: 2701339635688229646, guid: 82e395331d4ca42b190dfc0fefc0f98c, type: 3}
+      propertyPath: DragonTailSprites.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701339635688229646, guid: 82e395331d4ca42b190dfc0fefc0f98c, type: 3}
+      propertyPath: DragonTailSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 262234968, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+    - target: {fileID: 2701339635688229646, guid: 82e395331d4ca42b190dfc0fefc0f98c, type: 3}
+      propertyPath: DragonTailSprites.Array.data[3]
+      value: 
+      objectReference: {fileID: -2032089111, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -705,6 +717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0a73e0d6e01d40f3a9f8e878b46ea58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerDistance: 0
   debugEnabled: 1
   p1: {fileID: 1738371660}
   p2: {fileID: 1050039031}
@@ -851,22 +864,6 @@ PrefabInstance:
       propertyPath: healthbar
       value: 
       objectReference: {fileID: 6944813386078466323}
-    - target: {fileID: 2701339635688229646, guid: 82e395331d4ca42b190dfc0fefc0f98c, type: 3}
-      propertyPath: DragonTailSprites.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2701339635688229646, guid: 82e395331d4ca42b190dfc0fefc0f98c, type: 3}
-      propertyPath: DragonTailSprites.Array.data[0]
-      value: 
-      objectReference: {fileID: -2032089111, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
-    - target: {fileID: 2701339635688229646, guid: 82e395331d4ca42b190dfc0fefc0f98c, type: 3}
-      propertyPath: DragonTailSprites.Array.data[1]
-      value: 
-      objectReference: {fileID: 262234968, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
-    - target: {fileID: 2701339635688229646, guid: 82e395331d4ca42b190dfc0fefc0f98c, type: 3}
-      propertyPath: DragonTailSprites.Array.data[2]
-      value: 
-      objectReference: {fileID: -2032089111, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
