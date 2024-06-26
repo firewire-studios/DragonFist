@@ -54,6 +54,7 @@ public class GameController : MonoBehaviour
             GamepadButton.A,
             GamepadButton.X,
             GamepadButton.Y,
+            GamepadButton.B,
         };
 
         // Validate gamepads
@@ -206,7 +207,7 @@ public class GameController : MonoBehaviour
 
             }
 
-            if (selectedMove != null && fighter.currentAttack == null && !fighter.stunned)
+            if (selectedMove != null && fighter.currentAttack == null && !fighter.stunned && fighter.stillFrames <= 0)
             {
                 Debug.Log($"Used Move {selectedMove.MoveName}");
                 fighter.FlushBuffer();
@@ -262,6 +263,13 @@ public class GameController : MonoBehaviour
                     }
                     
                     //_players[team].HandleButtonPressed(button);
+                    
+                    
+                }
+                
+                if (button == GamepadButton.B)
+                {
+                    _players[team].blocking = true;
                 }
                 
             }
@@ -282,7 +290,13 @@ public class GameController : MonoBehaviour
                     
                     //_players[team].HandleButtonPressed(button);
                 }
+
+                if (button == GamepadButton.B)
+                {
+                    _players[team].blocking = false;
+                }
             }
+            
             
             if (gp[button].wasPressedThisFrame)
             {

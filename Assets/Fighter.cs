@@ -10,6 +10,10 @@ public class Fighter : MonoBehaviour
 {
     public Sprite StandingSprite;
     public Sprite CrouchingSprite;
+
+    public Sprite StandingBlockSprite;
+    public Sprite CrouchingBlockSprite;
+    
     [SerializeField] public List<Sprite> WalkSprites;
     [SerializeField] public List<Sprite> WalkBackSprites;
     [SerializeField] public List<Sprite> StunSprites;
@@ -41,6 +45,8 @@ public class Fighter : MonoBehaviour
     public int health = 100;
 
     public bool crouching = false;
+    public bool blocking = false;
+    
     public int xSpeed = 0;
     public Queue<BufferedInput> buffer;
     public List<FighterMove> moves;
@@ -326,7 +332,14 @@ public class Fighter : MonoBehaviour
 
         if (crouching)
         {
-            spr.sprite = CrouchingSprite;
+            if (blocking)
+            {
+                spr.sprite = CrouchingBlockSprite;
+            }
+            else
+            {
+                spr.sprite = CrouchingSprite;
+            }
             Hitbox.transform.localPosition = hitBoxCrouchingPosition;
             Hitbox.transform.localScale = hitBoxCrouchingScale;
             currentFrame++;
@@ -343,7 +356,7 @@ public class Fighter : MonoBehaviour
         
         // Only move if space
         Vector3 newPosition = transform.position + new Vector3(xSpeed * 0.2f, 0, 0);
-        if (newPosition.x <= 25 && newPosition.x >= -25)
+        if (newPosition.x <= 25 && newPosition.x >= -25 && blocking == false)
         {
             if (GameController.GetDifferenceToPlayer(team,newPosition) < 15f)
             {
@@ -352,7 +365,7 @@ public class Fighter : MonoBehaviour
             
         }
 
-        if (xSpeed != 0)
+        if (xSpeed != 0 && !blocking)
         {
             // Get walking direction
             int direction = side == 0 ? xSpeed : -xSpeed;
@@ -380,7 +393,14 @@ public class Fighter : MonoBehaviour
         }
         else
         {
-            spr.sprite = StandingSprite;
+            if (blocking)
+            {
+                spr.sprite = StandingBlockSprite;
+            }
+            else
+            {
+                spr.sprite = StandingSprite;
+            }
         }
         
         
@@ -440,7 +460,8 @@ public class Fighter : MonoBehaviour
         Jump,
         Rock, // a
         Paper, // x
-        Scissor // y
+        Scissor, // y
+        Block // b
     }
 
     /**

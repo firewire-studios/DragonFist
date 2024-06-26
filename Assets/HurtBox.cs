@@ -49,6 +49,14 @@ public class HurtBox : MonoBehaviour
                 Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
                 if (fighter.team != team)
                 {
+                    if (fighter.blocking)
+                    {
+                        parentFighter.stillFrames = 40;
+                        parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
+                        
+                        return;
+                    }
+                    
                     fighter.health -= 10;
                     fighter.pushFrames = parentFighter.currentAttack.pushFrames;
                     fighter.currentAttack = null;
@@ -57,6 +65,7 @@ public class HurtBox : MonoBehaviour
                     active = false;
                     return;
                 }
+                
 
             }
             

@@ -61,6 +61,7 @@ public class BufferRenderer : MonoBehaviour
             case Fighter.Action.Rock: return a;
             case Fighter.Action.Paper: return x;
             case Fighter.Action.Scissor: return y;
+            case Fighter.Action.Block: return b;
         }
 
         return b;

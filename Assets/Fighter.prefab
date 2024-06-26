@@ -103,6 +103,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StandingSprite: {fileID: 1936157825, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   CrouchingSprite: {fileID: 71129362, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  StandingBlockSprite: {fileID: 1639323360, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  CrouchingBlockSprite: {fileID: 625437045, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   WalkSprites:
   - {fileID: 1921757584, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   - {fileID: 1165502595, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
