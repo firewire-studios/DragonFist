@@ -18,6 +18,7 @@ public class FighterMove
     public bool standingMove = true;
     public GameObject hurtbox = null;
     public int pushFrames = 6;
+    public bool shouldLaunch = false;
 
     public List<Sprite> sprites;
     

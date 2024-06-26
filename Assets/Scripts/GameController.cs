@@ -269,7 +269,11 @@ public class GameController : MonoBehaviour
                 
                 if (button == GamepadButton.B)
                 {
-                    _players[team].blocking = true;
+                    if (!_players[team].stunned && !_players[team].launched && _players[team].stillFrames <= 0)
+                    {
+                        _players[team].blocking = true;
+
+                    }
                 }
                 
             }
@@ -293,6 +297,7 @@ public class GameController : MonoBehaviour
 
                 if (button == GamepadButton.B)
                 {
+                    
                     _players[team].blocking = false;
                 }
             }

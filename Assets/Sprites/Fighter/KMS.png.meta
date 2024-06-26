@@ -1138,8 +1138,8 @@ TextureImporter:
         y: 530
         width: 274
         height: 333
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.27027026}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1159,8 +1159,8 @@ TextureImporter:
         y: 548
         width: 285
         height: 315
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.36507937}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1180,8 +1180,8 @@ TextureImporter:
         y: 564
         width: 315
         height: 264
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5113636}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1550,6 +1550,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: KMS_68
+      rect:
+        serializedVersion: 2
+        x: 4446
+        y: 621
+        width: 345
+        height: 183
+      alignment: 9
+      pivot: {x: 0.45652175, y: 0.8469945}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1e3dfa03dcc94098b37327fe9696401
+      internalID: -371653556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1626,6 +1647,7 @@ TextureImporter:
       KMS_65: -1905967161
       KMS_66: 1639323360
       KMS_67: 625437045
+      KMS_68: -371653556
       KMS_7: 1079553242
       KMS_8: -440290951
       KMS_9: 1415682222

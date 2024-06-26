@@ -17,6 +17,7 @@ public class Fighter : MonoBehaviour
     [SerializeField] public List<Sprite> WalkSprites;
     [SerializeField] public List<Sprite> WalkBackSprites;
     [SerializeField] public List<Sprite> StunSprites;
+    [SerializeField] public List<Sprite> LaunchSprites;
     
     
     [SerializeField] public List<Sprite> RockPunchSprites;
@@ -79,7 +80,8 @@ public class Fighter : MonoBehaviour
     private Vector3 hitBoxCrouchingPosition = new Vector3(0,-0.210999995f,-1);
 
     public bool stunned = false;
-
+    public bool launched = false;
+    public int launchedTimes = 0;
     /**
      * If more than 0 then character cannot move
      */
@@ -179,6 +181,7 @@ public class Fighter : MonoBehaviour
         DragonJaw.sprites = DragonJawSprites;
         DragonJaw.frameInterval = 4;
         DragonJaw.hurtbox = JabHurtbox;
+        DragonJaw.shouldLaunch = true;
         moves.Add(DragonJaw);
         
         //moves.Add(Paper);
@@ -236,7 +239,33 @@ public class Fighter : MonoBehaviour
 
     public void Stun()
     {
+        if (launched)
+        {
+            return;
+        }
+        
+        blocking = false;
         stunned = true;
+        currentSpriteIndex = 0;
+    }
+
+    public void Launch()
+    {
+        if (launched && launchedTimes >7 )
+        {
+            launchedTimes = 0;
+            launched = false;
+            return;
+        }
+        
+        if (launched)
+        {
+            launchedTimes++;
+        }
+
+        blocking = false;
+        stunned = false;
+        launched = true;
         currentSpriteIndex = 0;
     }
     
@@ -282,6 +311,28 @@ public class Fighter : MonoBehaviour
 
             return;
         }
+
+        if (launched)
+        {
+            if (currentSpriteIndex == LaunchSprites.Count)
+            {
+                launched = false;
+                //spr.sprite = StandingSprite;
+                currentSpriteIndex = 0;
+                return;
+            }
+            
+            if (currentFrame >= 8) // todo
+            {
+                spr.sprite = LaunchSprites[currentSpriteIndex];
+                currentSpriteIndex++;
+                currentFrame = 0;
+            }
+            
+            currentFrame++;
+
+            return;
+        }
         
 
         // Animate current move
@@ -303,7 +354,10 @@ public class Fighter : MonoBehaviour
                 if (currentAttack.IsHurtFrame(currentSpriteIndex))
                 {
                     Debug.Log("Activeate Hurt Box");
-                    ActivateHurtBox(currentAttack.hurtbox);
+                    if (!currentAttack.hurtbox.activeSelf)
+                    {
+                        ActivateHurtBox(currentAttack.hurtbox);
+                    }
                 }
 
                 if (currentAttack.IsCooldownFrame(currentSpriteIndex))

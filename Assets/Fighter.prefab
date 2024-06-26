@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 262234968, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  m_Sprite: {fileID: -791822703, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -123,6 +123,12 @@ MonoBehaviour:
   - {fileID: -312610304, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   - {fileID: 643786979, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   - {fileID: -1426832399, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  LaunchSprites:
+  - {fileID: -791822703, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 632526460, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -1905967161, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -371653556, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: 71129362, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   RockPunchSprites:
   - {fileID: 464996883, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   - {fileID: -2104364539, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
@@ -141,6 +147,7 @@ MonoBehaviour:
   spr: {fileID: 0}
   health: 100
   crouching: 0
+  blocking: 0
   xSpeed: 0
   healthbar: {fileID: 0}
   side: 0
@@ -148,6 +155,7 @@ MonoBehaviour:
   JabHurtbox: {fileID: 4849738603917375610}
   PaperKickHurtbox: {fileID: 4486371068884161629}
   stunned: 0
+  launched: 0
   stillFrames: 0
   pushFrames: 0
   team: 0

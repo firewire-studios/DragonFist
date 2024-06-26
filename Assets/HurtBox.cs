@@ -49,18 +49,51 @@ public class HurtBox : MonoBehaviour
                 Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
                 if (fighter.team != team)
                 {
-                    if (fighter.blocking)
+                    if (fighter.launched)
                     {
-                        parentFighter.stillFrames = 40;
-                        parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
-                        
+                        Debug.Log("Launch Again");
+                        active = false;
+                        fighter.Launch();
                         return;
+                    }
+                    
+                    if (fighter.blocking && fighter.crouching)
+                    {
+                        if (!parentFighter.currentAttack.standingMove)
+                        {
+                            parentFighter.stillFrames = 40; // make var
+                            parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
+                        
+                            return;
+                        }
+                        
+                        
+                    }
+                    
+                    if (fighter.blocking && !fighter.crouching)
+                    {
+                        if (parentFighter.currentAttack.standingMove)
+                        {
+                            parentFighter.stillFrames = 40;
+                            parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
+                        
+                            return;
+                        }
+                        
                     }
                     
                     fighter.health -= 10;
                     fighter.pushFrames = parentFighter.currentAttack.pushFrames;
                     fighter.currentAttack = null;
-                    fighter.Stun();
+
+                    if (parentFighter.currentAttack.shouldLaunch)
+                    {
+                        fighter.Launch();
+                    }
+
+                    {
+                        fighter.Stun();
+                    }
                     
                     active = false;
                     return;
