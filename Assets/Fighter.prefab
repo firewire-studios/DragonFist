@@ -149,6 +149,11 @@ MonoBehaviour:
   - {fileID: 262234968, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   - {fileID: 262234968, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   - {fileID: -2032089111, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  ScissorPunchSprites:
+  - {fileID: -725282835, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -194527618, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -194527618, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
+  - {fileID: -725282835, guid: 2fb797a76e185413a8c7cc0238a7a2ae, type: 3}
   rockpunch: 0
   spr: {fileID: 0}
   health: 100

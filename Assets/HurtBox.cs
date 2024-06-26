@@ -43,7 +43,26 @@ public class HurtBox : MonoBehaviour
 
         foreach (var collider in results)
         {
-            if (collider.tag == "Hitbox")
+            if (collider.tag == "Hurtbox")
+            {
+                Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
+
+                if (fighter.currentAttack != null)
+                {
+                    if (parentFighter.currentAttack.Beats(fighter.currentAttack))
+                    {
+                        fighter.Launch();
+                        fighter.pushFrames = parentFighter.currentAttack.pushFrames;
+                        fighter.DeactivateHurtBox(fighter.currentAttack.hurtbox);
+                        fighter.currentAttack = null;
+                        active = false;
+                        return;
+                    }
+                }
+                return;
+            }
+
+                if (collider.tag == "Hitbox")
             {
                 // Check the team
                 Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();

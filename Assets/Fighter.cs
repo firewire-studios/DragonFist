@@ -23,13 +23,14 @@ public class Fighter : MonoBehaviour
     [SerializeField] public List<Sprite> RockPunchSprites;
     [SerializeField] public List<Sprite> DragonJawSprites; // rock type
     
-    [SerializeField] public List<Sprite> PaperPunchSprites; // rock type
+    [SerializeField] public List<Sprite> PaperPunchSprites; // paper type
 
     
     // Paper kick
     [SerializeField] public List<Sprite> DragonTailSprites;
     
-    
+    [SerializeField] public List<Sprite> ScissorPunchSprites; // scissor type
+
     /*
      * Temp
      */
@@ -195,6 +196,15 @@ public class Fighter : MonoBehaviour
         Paper.type = FighterMove.MoveType.Paper;
         Paper.frameInterval = 1;
         moves.Add(Paper);
+        
+        Scissors.idleFrames = 1;
+        Scissors.hurtFrames = 2;
+        Scissors.coolDownFrames = 1;
+        Scissors.sprites = ScissorPunchSprites;
+        Scissors.hurtbox = JabHurtbox;
+        Scissors.type = FighterMove.MoveType.Scissor;
+        //Paper.frameInterval = 1;
+        moves.Add(Scissors);
 
         DragonJaw.idleFrames = 1;
         DragonJaw.hurtFrames = 1;
