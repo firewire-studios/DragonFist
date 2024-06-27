@@ -195,6 +195,7 @@ public class Fighter : MonoBehaviour
         );
 
         DragonTail.idleFrames = 1;
+        DragonTail.dmg = 6;
         DragonTail.hurtFrames = 2;
         DragonTail.coolDownFrames = 1;
         DragonTail.standingMove = false;
@@ -219,6 +220,7 @@ public class Fighter : MonoBehaviour
         DownJab.pushFrames = 20;
         DownJab.frameInterval = 3;
         DownJab.type = FighterMove.MoveType.Rock;
+        DownJab.dmg = 4;
         moves.Add(DownJab);
         
         FighterMove DownScissor = new FighterMove("DownScissor",
@@ -235,6 +237,7 @@ public class Fighter : MonoBehaviour
         DownScissor.pushFrames = 20;
         DownScissor.frameInterval = 3;
         DownScissor.type = FighterMove.MoveType.Scissor;
+        DownScissor.dmg = 5;
         moves.Add(DownScissor);
         
         // Special Moves
@@ -249,6 +252,7 @@ public class Fighter : MonoBehaviour
         Rock.coolDownFrames = 1;
         Rock.sprites = RockPunchSprites;
         Rock.hurtbox = JabHurtbox;
+        Rock.dmg = 4;
         //Rock.frameInterval = 30;
         moves.Add(Rock);
         
@@ -259,6 +263,7 @@ public class Fighter : MonoBehaviour
         Paper.hurtbox = JabHurtbox;
         Paper.type = FighterMove.MoveType.Paper;
         Paper.frameInterval = 1;
+        Paper.dmg = 4;
         moves.Add(Paper);
         
         Scissors.idleFrames = 1;
@@ -267,6 +272,7 @@ public class Fighter : MonoBehaviour
         Scissors.sprites = ScissorPunchSprites;
         Scissors.hurtbox = JabHurtbox;
         Scissors.type = FighterMove.MoveType.Scissor;
+        Scissors.dmg = 4;
         //Paper.frameInterval = 1;
         moves.Add(Scissors);
 
@@ -277,7 +283,7 @@ public class Fighter : MonoBehaviour
         DragonJaw.frameInterval = 4;
         DragonJaw.hurtbox = UppercutHurtBox;
         DragonJaw.shouldLaunch = true;
-        DragonJaw.dmg = 25;
+        DragonJaw.dmg = 9;
         moves.Add(DragonJaw);
         
         FighterMove Doomfist = new FighterMove("Doomfist",
@@ -292,7 +298,7 @@ public class Fighter : MonoBehaviour
         Doomfist.frameInterval = 4;
         Doomfist.hurtbox = DoomFistHurtBox;
         Doomfist.shouldLaunch = false;
-        Doomfist.dmg = 25;
+        Doomfist.dmg = 22;
         Doomfist.pushFrames = 60;
         Doomfist.type = FighterMove.MoveType.Rock;
         moves.Add(Doomfist);
@@ -309,7 +315,7 @@ public class Fighter : MonoBehaviour
         DoomPaper.frameInterval = 2;
         DoomPaper.hurtbox = DoomPaperHurtBox;
         DoomPaper.shouldLaunch = false;
-        DoomPaper.dmg = 15;
+        DoomPaper.dmg = 17;
         DoomPaper.pushFrames = 60;
         DoomPaper.type = FighterMove.MoveType.Paper;
         moves.Add(DoomPaper);

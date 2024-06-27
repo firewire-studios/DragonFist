@@ -8,7 +8,9 @@ public class HurtBox : MonoBehaviour
     private BoxCollider2D _collider2D;
     private int team;
     public bool active;
+    private const int dmgMult = 1;
 
+    
     private Fighter parentFighter;
     private void Awake()
     {
@@ -71,7 +73,7 @@ public class HurtBox : MonoBehaviour
             {
                 // Check the team
                 Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
-                int dmg = parentFighter.currentAttack.dmg;
+                int dmg = parentFighter.currentAttack.dmg * dmgMult;
                 if (fighter.team != team)
                 {
                     if (fighter.launched)

@@ -10,7 +10,14 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class GameController : MonoBehaviour
 {
+    private bool firstInput = false;
+    private int updates = 0;
+    
+    public TextMeshProUGUI centerText;
     public TextMeshProUGUI timer;
+
+    public int preStartTimer = 120;
+    
     public int roundTime = 60 * 60 * 60;
     public const int maxRoundTime = 60 * 60;
     
@@ -74,6 +81,8 @@ public class GameController : MonoBehaviour
             GamepadButton.X,
             GamepadButton.Y,
             GamepadButton.B,
+            
+            GamepadButton.Start,
         };
 
         // Validate gamepads
@@ -84,12 +93,15 @@ public class GameController : MonoBehaviour
         
         gp1 = Gamepad.all[0];
         gp2 = Gamepad.all[1];
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        
+        
         //Toggle debug
         if (Input.GetKeyDown(KeyCode.Tilde))
         {
@@ -99,6 +111,11 @@ public class GameController : MonoBehaviour
         currentTimeStep += Time.deltaTime * 1000;
         if (currentTimeStep >= FixedTimeStep)
         {
+            if (updates < 60)
+            {
+                updates++;
+            }
+            
             FixedTimeStepUpdate();
             currentTimeStep = 0;
         }
@@ -112,37 +129,12 @@ public class GameController : MonoBehaviour
 
     private void FixedTimeStepUpdate()
     {
-        if (!started)
+        
+        if (!firstInput)
         {
-            if (restartCountdown <= 0)
-            {
-                if (p1.wins >= 3 || p2.wins >= 3)
-                {
-                    p1.wins = 0;
-                    p2.wins = 0;
-                }
-                
-                // restart the game
-                p1.health = 100;
-                p2.health = 100;
-                FixedTimeStep /= timeStepMultiplier;
-                started = true;
-
-                p1.transform.position = p1Startpos;
-                p2.transform.position = p2Startpos;
-                
-                roundTime = maxRoundTime;
-
-            }
-            else
-            {
-                restartCountdown -= 1;
-            }
-            //return;
+            return;
         }
         
-        // Set player left and right positions
-
         float p1x = p1.transform.position.x;
         float p2x = p2.transform.position.x;
         playerDistance = Mathf.Abs(p1x - p2x);
@@ -163,6 +155,69 @@ public class GameController : MonoBehaviour
         }
 
         cam.transform.position = Vector3.Lerp(cam.transform.position, Difference, 0.05f);
+        
+
+        if (preStartTimer > 0)
+        {
+
+            preStartTimer--;
+
+            if (preStartTimer > 0 && preStartTimer <= 25)
+            {
+                SetCenterText("FIGHT!");
+            }
+
+            if (preStartTimer <= 0)
+            {
+                SetCenterText("");
+            }
+            
+            return;
+        }
+        
+        if (!started)
+        {
+            if (restartCountdown <= 0)
+            {
+                if (p1.wins >= 3 || p2.wins >= 3)
+                {
+                    p1.wins = 0;
+                    p2.wins = 0;
+
+                    firstInput = false;
+                    SetCenterText("PRESS START");
+                    return;
+                }
+                
+                // restart the game
+                p1.health = 100;
+                p2.health = 100;
+                p1.healthbar.SetHealth(100);
+                p2.healthbar.SetHealth(100);
+                
+                FixedTimeStep /= timeStepMultiplier;
+                started = true;
+
+                p1.transform.position = p1Startpos;
+                p2.transform.position = p2Startpos;
+                
+                preStartTimer = 120;
+                SetCenterText("ROUND  " + (p1.wins + p2.wins + 1).ToString());
+                return;
+                
+                roundTime = maxRoundTime;
+
+            }
+            else
+            {
+                restartCountdown -= 1;
+            }
+            //return;
+        }
+        
+        // Set player left and right positions
+
+       
 
         if (p1.transform.position.x < p2.transform.position.x)
         {
@@ -296,6 +351,7 @@ public class GameController : MonoBehaviour
             loser.pushFrames = 40;
             started = false;
 
+            
             FixedTimeStep *= timeStepMultiplier;
         }
     }
@@ -307,6 +363,11 @@ public class GameController : MonoBehaviour
         return Mathf.Abs(otherPlayerPosition.x - newPosition.x) ;
     }
 
+    public void SetCenterText(string text)
+    {
+        centerText.text = text;
+    }
+
     private void PollInput(Gamepad gp, int team)
     {
         
@@ -314,6 +375,8 @@ public class GameController : MonoBehaviour
         {
             if (gp[button].isPressed)
             {
+                
+                
                 if (button == GamepadButton.DpadRight)
                 {
                     _players[team].xSpeed = 1;
@@ -358,6 +421,8 @@ public class GameController : MonoBehaviour
 
             if (gp[button].wasReleasedThisFrame || !gp[button].isPressed)
             {
+                
+                
                 if (button == GamepadButton.DpadDown)
                 {
                     if (_players[team].currentAttack != null && !_players[team].currentAttack.standingMove )
@@ -383,6 +448,13 @@ public class GameController : MonoBehaviour
             
             if (gp[button].wasPressedThisFrame)
             {
+                if (!firstInput  && button == GamepadButton.Start)
+                {
+                    Debug.Log($"first input {button}");
+                    SetCenterText("ROUND 1");
+                    firstInput = true;
+                }
+                
                 _players[team].HandleButtonPressed(button);
             }
         }

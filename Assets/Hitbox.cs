@@ -9,6 +9,7 @@ public class Hitbox : MonoBehaviour
     public bool canBePushedThisFrame = true;
     public Fighter parent;
 
+    
     private void Awake()
     {
         _collider2D = GetComponent<BoxCollider2D>();
