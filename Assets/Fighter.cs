@@ -49,6 +49,36 @@ public class Fighter : MonoBehaviour
     
     [SerializeField] public List<Sprite> ScissorPunchSprites; // scissor type
 
+    
+    
+    [Header("Character 2")]
+    /*
+     *Second Sprite List :D
+     *
+     */
+     
+    public Sprite losingSprite2;
+    public Sprite StandingSprite2;
+    public Sprite CrouchingSprite2;
+    public Sprite StandingBlockSprite2;
+    public Sprite CrouchingBlockSprite2;
+    
+    [SerializeField] public List<Sprite> WalkSprites2;
+    [SerializeField] public List<Sprite> WalkBackSprites2;
+    [SerializeField] public List<Sprite> StunSprites2;
+    [SerializeField] public List<Sprite> LaunchSprites2;
+    [SerializeField] public List<Sprite> RockPunchSprites2;
+    [SerializeField] public List<Sprite> DragonJawSprites2; // rock type
+    [SerializeField] public List<Sprite> DoomFistSprites2; // rock type
+    [SerializeField] public List<Sprite> DoomPaperSprites2; // paper type
+    [SerializeField] public List<Sprite> PaperPunchSprites2; // paper type
+    [SerializeField] public List<Sprite> DragonTailSprites2;
+    [SerializeField] public List<Sprite> RockDownJabSprites2; // rock
+    [SerializeField] public List<Sprite> ScissorDownJabSprites2; // scissor
+    [SerializeField] public List<Sprite> ScissorPunchSprites2;
+    
+    [Header("REST")]
+
     /*
      * Temp
      */
@@ -136,8 +166,38 @@ public class Fighter : MonoBehaviour
     [SerializeField]
     public int team;
 
+    private void setOtherSprites()
+    {
+        
+         losingSprite = losingSprite2;
+         StandingSprite = StandingSprite2;
+         CrouchingSprite = CrouchingSprite2;
+         StandingBlockSprite = StandingBlockSprite2;
+         CrouchingBlockSprite = CrouchingBlockSprite2;
+
+         WalkSprites = WalkSprites2;
+         WalkBackSprites = WalkBackSprites2;
+         StunSprites = StunSprites2;
+         LaunchSprites = LaunchSprites2;
+         RockPunchSprites = RockPunchSprites2;
+         DragonJawSprites = DragonJawSprites2;
+         DoomFistSprites = DoomFistSprites2; 
+         DoomPaperSprites = DoomPaperSprites2; 
+         PaperPunchSprites = PaperPunchSprites2;
+         DragonTailSprites = DragonTailSprites2;
+         RockDownJabSprites = RockDownJabSprites2;
+         ScissorDownJabSprites = ScissorDownJabSprites2;
+         ScissorPunchSprites = ScissorPunchSprites2;
+        
+    }
+
     private void Awake()
     {
+        if (team == 1)
+        {
+            setOtherSprites();
+        }
+        
         MoveTypeIndicator = GetComponentInChildren<MoveTypeIndicator>();
         spr = GetComponent<SpriteRenderer>();
         spr.sprite = StandingSprite;

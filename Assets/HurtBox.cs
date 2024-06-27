@@ -52,6 +52,10 @@ public class HurtBox : MonoBehaviour
             if (collider.tag == "Hurtbox")
             {
                 Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
+                if (fighter.team == parentFighter.team)
+                {
+                    return;
+                }
 
                 if (fighter.currentAttack != null)
                 {
@@ -59,9 +63,9 @@ public class HurtBox : MonoBehaviour
                     {
                         parentFighter.CounterBox.GetComponent<AppearAndFade>().Appear();
 
+                        fighter.DeactivateHurtBox(fighter.currentAttack.hurtbox);
                         fighter.Launch();
                         fighter.pushFrames = parentFighter.currentAttack.pushFrames;
-                        fighter.DeactivateHurtBox(fighter.currentAttack.hurtbox);
                         fighter.currentAttack = null;
                         active = false;
                         return;
@@ -74,7 +78,13 @@ public class HurtBox : MonoBehaviour
             {
                 // Check the team
                 Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
+                if (parentFighter.currentAttack == null)
+                {
+                    return;
+                }
+                
                 int dmg = parentFighter.currentAttack.dmg * dmgMult;
+                
                 if (fighter.team != team)
                 {
                     if (fighter.launched)
