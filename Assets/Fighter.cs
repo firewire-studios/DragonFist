@@ -11,6 +11,7 @@ public class Fighter : MonoBehaviour
     public GameObject CounterBox;
     public MoveTypeIndicator MoveTypeIndicator;
     
+    public Sprite losingSprite;
     public Sprite StandingSprite;
     public Sprite CrouchingSprite;
 
@@ -25,12 +26,15 @@ public class Fighter : MonoBehaviour
     
     [SerializeField] public List<Sprite> RockPunchSprites;
     [SerializeField] public List<Sprite> DragonJawSprites; // rock type
+    [SerializeField] public List<Sprite> DoomFistSprites; // rock type
     
     [SerializeField] public List<Sprite> PaperPunchSprites; // paper type
 
     
     // Paper kick
     [SerializeField] public List<Sprite> DragonTailSprites;
+    [SerializeField] public List<Sprite> RockDownJabSprites; // rock
+    [SerializeField] public List<Sprite> ScissorDownJabSprites; // scissor
     
     [SerializeField] public List<Sprite> ScissorPunchSprites; // scissor type
 
@@ -51,7 +55,8 @@ public class Fighter : MonoBehaviour
     public SpriteRenderer spr;
     
     public int health = 100;
-
+    public int wins = 0;
+    
     public bool crouching = false;
     public bool blocking = false;
     
@@ -74,11 +79,19 @@ public class Fighter : MonoBehaviour
 
     public GameObject PaperKickHurtbox;
     public GameObject UppercutHurtBox;
+    public GameObject DownJabHurtBox;
+    public GameObject ScissorDownHurtBox;
+    public GameObject DoomFistHurtBox;
+    
     
     // Hurtbox transforms
     private Vector3 hurtBoxStartPosition;
     
     private Vector3 PaperHurtBoxStartPosition;
+    private Vector3 DownJabHurtBoxStartPosition;
+    private Vector3 ScissorDownHurtBoxStartPosition;
+    private Vector3 DoomFistHurtBoxStartPosition;
+    
     private Vector3 UppercutHurtBoxStartPosition;
     
     // Hitbox transforms
@@ -129,6 +142,15 @@ public class Fighter : MonoBehaviour
         UppercutHurtBoxStartPosition = UppercutHurtBox.transform.localPosition;
         UppercutHurtBox.SetActive(false);
         
+        DownJabHurtBoxStartPosition = DownJabHurtBox.transform.localPosition;
+        DownJabHurtBox.SetActive(false);
+
+        ScissorDownHurtBoxStartPosition = ScissorDownHurtBox.transform.localPosition;
+        ScissorDownHurtBox.SetActive(false);
+
+        DoomFistHurtBoxStartPosition = DoomFistHurtBox.transform.localPosition;
+        DoomFistHurtBox.SetActive(false);
+        
         // Register Moves
         moves = new List<FighterMove>();
         
@@ -155,10 +177,7 @@ public class Fighter : MonoBehaviour
         );
         
         
-        FighterMove Doomfist = new FighterMove("Doomfist",
-                new List<Action>(){Action.Down,Action.Forward,Action.Rock},
-                1
-            );
+        
         
         // Crouching moves
         FighterMove DragonTail = new FighterMove("DragonTail",
@@ -176,6 +195,38 @@ public class Fighter : MonoBehaviour
         DragonTail.frameInterval = 6;
         DragonTail.type = FighterMove.MoveType.Paper;
         moves.Add(DragonTail);
+        
+        FighterMove DownJab = new FighterMove("DownJab",
+            new List<Action>() {Action.Rock},
+            5
+        );
+        
+        DownJab.idleFrames = 1;
+        DownJab.hurtFrames = 2;
+        DownJab.coolDownFrames = 1;
+        DownJab.standingMove = false;
+        DownJab.sprites = RockDownJabSprites;
+        DownJab.hurtbox = DownJabHurtBox;
+        DownJab.pushFrames = 20;
+        DownJab.frameInterval = 3;
+        DownJab.type = FighterMove.MoveType.Rock;
+        moves.Add(DownJab);
+        
+        FighterMove DownScissor = new FighterMove("DownScissor",
+            new List<Action>() {Action.Scissor},
+            5
+        );
+        
+        DownScissor.idleFrames = 1;
+        DownScissor.hurtFrames = 2;
+        DownScissor.coolDownFrames = 1;
+        DownScissor.standingMove = false;
+        DownScissor.sprites = ScissorDownJabSprites;
+        DownScissor.hurtbox = ScissorDownHurtBox;
+        DownScissor.pushFrames = 20;
+        DownScissor.frameInterval = 3;
+        DownScissor.type = FighterMove.MoveType.Scissor;
+        moves.Add(DownScissor);
         
         // Special Moves
         FighterMove DragonJaw = new FighterMove("DragonJaw",
@@ -217,7 +268,25 @@ public class Fighter : MonoBehaviour
         DragonJaw.frameInterval = 4;
         DragonJaw.hurtbox = UppercutHurtBox;
         DragonJaw.shouldLaunch = true;
+        DragonJaw.dmg = 25;
         moves.Add(DragonJaw);
+        
+        FighterMove Doomfist = new FighterMove("Doomfist",
+            new List<Action>(){Action.Down,Action.Forward,Action.Rock},
+            1
+        );
+        
+        Doomfist.idleFrames = 3;
+        Doomfist.hurtFrames = 2;
+        Doomfist.coolDownFrames = 1;
+        Doomfist.sprites = DoomFistSprites;
+        Doomfist.frameInterval = 4;
+        Doomfist.hurtbox = DoomFistHurtBox;
+        Doomfist.shouldLaunch = false;
+        Doomfist.dmg = 25;
+        Doomfist.pushFrames = 60;
+        Doomfist.type = FighterMove.MoveType.Rock;
+        moves.Add(Doomfist);
         
         //moves.Add(Paper);
         //moves.Add(Scissors);
@@ -304,12 +373,18 @@ public class Fighter : MonoBehaviour
         stunned = false;
         launched = true;
         currentSpriteIndex = 0;
+        if (currentAttack != null)
+        {
+            DeactivateHurtBox(currentAttack.hurtbox);
+            currentAttack = null;
+        }
     }
     
     public void FixedTimestepUpdate()
     {
 
         healthbar.SetHealth(health);
+        healthbar.enableWins(wins);
         
         if (pushFrames > 0)
         {
@@ -374,7 +449,11 @@ public class Fighter : MonoBehaviour
 
             return;
         }
-        
+
+        if (health <= 0)
+        {
+            spr.sprite = losingSprite;
+        }
 
         // Animate current move
         if (currentAttack != null)
@@ -572,6 +651,9 @@ public class Fighter : MonoBehaviour
             JabHurtbox.transform.localPosition = hurtBoxStartPosition;
             PaperKickHurtbox.transform.localPosition =PaperHurtBoxStartPosition;
             UppercutHurtBox.transform.localPosition =UppercutHurtBoxStartPosition;
+            DownJabHurtBox.transform.localPosition = DownJabHurtBoxStartPosition;
+            ScissorDownHurtBox.transform.localPosition = ScissorDownHurtBoxStartPosition;
+            DoomFistHurtBox.transform.localPosition = DoomFistHurtBoxStartPosition;
             spr.flipX = false;
             return;
         }
@@ -582,6 +664,9 @@ public class Fighter : MonoBehaviour
             JabHurtbox.transform.localPosition = new Vector3(-hurtBoxStartPosition.x,hurtBoxStartPosition.y,-hurtBoxStartPosition.z);
             PaperKickHurtbox.transform.localPosition = new Vector3(-PaperHurtBoxStartPosition.x,PaperHurtBoxStartPosition.y,-PaperHurtBoxStartPosition.z);
             UppercutHurtBox.transform.localPosition = new Vector3(-UppercutHurtBoxStartPosition.x,UppercutHurtBoxStartPosition.y,-UppercutHurtBoxStartPosition.z);
+            DownJabHurtBox.transform.localPosition = new Vector3(-DownJabHurtBoxStartPosition.x,DownJabHurtBoxStartPosition.y,-DownJabHurtBoxStartPosition.z);
+            ScissorDownHurtBox.transform.localPosition = new Vector3(-ScissorDownHurtBoxStartPosition.x,ScissorDownHurtBoxStartPosition.y,-ScissorDownHurtBoxStartPosition.z);
+            DoomFistHurtBox.transform.localPosition = new Vector3(-DoomFistHurtBoxStartPosition.x,DoomFistHurtBoxStartPosition.y,-DoomFistHurtBoxStartPosition.z);
         }
     }
 }

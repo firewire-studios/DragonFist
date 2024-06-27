@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,14 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class GameController : MonoBehaviour
 {
+    public TextMeshProUGUI timer;
+    public int roundTime = 60 * 60 * 60;
+    public const int maxRoundTime = 60 * 60;
+    
+    public bool started = true;
+    public Vector3 p1Startpos;
+    public Vector3 p2Startpos;
+    
     private Camera cam;
     private float maxCamx = 18;
     public float playerDistance = 0;
@@ -21,8 +30,12 @@ public class GameController : MonoBehaviour
     public Fighter p2;
     private Fighter[] _players;
     
-    private const float FixedTimeStep = 1000 / 60;
+    private float FixedTimeStep = 1000 / 60;
     private float currentTimeStep = 0.0f;
+
+    private int restartCountdown = 0;
+    private int restartCountDownFrames = 60;
+    private int timeStepMultiplier = 4;
 
     private GamepadButton[] buttons;
     
@@ -31,6 +44,8 @@ public class GameController : MonoBehaviour
     
     private void Awake()
     {
+        roundTime = maxRoundTime;
+
         // Singleton
         if (instance == null)
         {
@@ -44,6 +59,10 @@ public class GameController : MonoBehaviour
     void Start()
     {
         _players = new[] {p1, p2};
+
+        p1Startpos = p1.transform.position;
+        p2Startpos = p2.transform.position;
+        
         buttons = new[]
         {
             GamepadButton.DpadDown,
@@ -86,10 +105,42 @@ public class GameController : MonoBehaviour
         
         PollInput(gp1,0);
         PollInput(gp2,1);
+        
+        // Check for health and winner
+        
     }
 
     private void FixedTimeStepUpdate()
     {
+        if (!started)
+        {
+            if (restartCountdown <= 0)
+            {
+                if (p1.wins >= 3 || p2.wins >= 3)
+                {
+                    p1.wins = 0;
+                    p2.wins = 0;
+                }
+                
+                // restart the game
+                p1.health = 100;
+                p2.health = 100;
+                FixedTimeStep /= timeStepMultiplier;
+                started = true;
+
+                p1.transform.position = p1Startpos;
+                p2.transform.position = p2Startpos;
+                
+                roundTime = maxRoundTime;
+
+            }
+            else
+            {
+                restartCountdown -= 1;
+            }
+            //return;
+        }
+        
         // Set player left and right positions
 
         float p1x = p1.transform.position.x;
@@ -132,7 +183,7 @@ public class GameController : MonoBehaviour
                 continue;
             }
             
-            if (fighter.buffer.Peek().frames >= 8)
+            if (fighter.buffer.Peek().frames >= 16)
             {
                 //Debug.Log($"Dequeued {fighter.buffer.Peek().action}");
                 fighter.buffer.Dequeue();
@@ -220,6 +271,33 @@ public class GameController : MonoBehaviour
         
         _players[0].FixedTimestepUpdate();
         _players[1].FixedTimestepUpdate();
+        roundTime -= 1;
+        timer.text = (roundTime/60).ToString();
+        
+        
+        // Check health
+        if (p1.health <= 0 || p2.health <= 0 || roundTime <=0)
+        {
+
+            if (!started)
+            {
+                return;
+            }
+
+            restartCountdown = restartCountDownFrames;
+            Fighter winner = p1.health > p2.health ? p1 : p2;
+            Fighter loser = winner.team ==0 ? p2 : p1;
+            
+            winner.spr.sprite = winner.StandingSprite;
+            winner.wins += 1;
+            //loser.spr.sprite = loser.losingSprite;
+            
+            loser.Launch();
+            loser.pushFrames = 40;
+            started = false;
+
+            FixedTimeStep *= timeStepMultiplier;
+        }
     }
 
     public static float GetDifferenceToPlayer(int _player, Vector3 newPosition)

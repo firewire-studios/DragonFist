@@ -67,7 +67,7 @@ public class HurtBox : MonoBehaviour
             {
                 // Check the team
                 Fighter fighter = collider.gameObject.GetComponentInParent<Fighter>();
-                int dmg = 10;
+                int dmg = parentFighter.currentAttack.dmg;
                 if (fighter.team != team)
                 {
                     if (fighter.launched)
@@ -89,7 +89,8 @@ public class HurtBox : MonoBehaviour
                             parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
                             parentFighter.currentAttack = null;
                             parentFighter.Stun();
-                        
+                            active = false;
+
                             return;
                         }
                         
@@ -103,6 +104,7 @@ public class HurtBox : MonoBehaviour
                             parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
                             parentFighter.currentAttack = null;
                             parentFighter.Stun();
+                            active = false;
 
                             return;
                         }

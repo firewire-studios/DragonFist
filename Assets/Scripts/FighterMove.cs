@@ -20,6 +20,7 @@ public class FighterMove
     public GameObject hurtbox = null;
     public int pushFrames = 6;
     public bool shouldLaunch = false;
+    public int dmg = 1;
 
     public List<Sprite> sprites;
     
