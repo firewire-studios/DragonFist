@@ -109,6 +109,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6c79f0380cd491f889bdae0811d2f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpperCutSound: {fileID: 8300000, guid: d4818981a3de840d6b1b48a63e01a647, type: 3}
+  StandardStrikeSound1: {fileID: 8300000, guid: 52bfa998b5787499a9725a2175097e7e, type: 3}
+  StandardStrikeSound2: {fileID: 8300000, guid: c955f00034f27401398c2972069bae2a, type: 3}
+  StandardStrikeSound3: {fileID: 8300000, guid: f43e7cac1f6264a1f87200cdf99d9245, type: 3}
+  DoomFistSound: {fileID: 8300000, guid: f70f7fb88ceeb4461bad33a3e314e5df, type: 3}
+  DoomPaperSound: {fileID: 8300000, guid: 2b87f3f5fb1fc4df899490177b6ba376, type: 3}
   HitObjPrefab: {fileID: 7604627652071811019, guid: 214959de6513e452aa0cad0258625223, type: 3}
   BlockObjPrefab: {fileID: 7604627652071811019, guid: ca586885c8d754bafbd4cac76afc7ea1, type: 3}
   CounterBox: {fileID: 3138238275390101030}

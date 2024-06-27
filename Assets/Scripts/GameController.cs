@@ -48,9 +48,34 @@ public class GameController : MonoBehaviour
     
     Gamepad gp1;
     Gamepad gp2;
+
+    [SerializeField]
+    public AudioSource sound;
+
+    [SerializeField]
+    public AudioSource music;
+    
+    public AudioClip Gong;
+    public AudioClip roundSound;
+    public AudioClip endRoundSound;
+    public AudioClip blockSound;
+    public AudioClip playAgain;
+    public AudioClip winSound;
+
+    public static void PlayBlockSound()
+    {
+        float lastvolume = instance.sound.volume;
+
+        instance.sound.volume = 1;
+        instance.sound.PlayOneShot(instance.blockSound);
+
+        instance.sound.volume = lastvolume;
+    }
     
     private void Awake()
     {
+        //sound = GetComponent<AudioSource>();
+        
         roundTime = maxRoundTime;
 
         // Singleton
@@ -162,8 +187,9 @@ public class GameController : MonoBehaviour
 
             preStartTimer--;
 
-            if (preStartTimer > 0 && preStartTimer <= 25)
+            if (preStartTimer == 25)
             {
+                sound.PlayOneShot(Gong);
                 SetCenterText("FIGHT!");
             }
 
@@ -184,7 +210,10 @@ public class GameController : MonoBehaviour
                     p1.wins = 0;
                     p2.wins = 0;
 
+                    music.Stop();
                     firstInput = false;
+                    roundTime = maxRoundTime;
+                    sound.PlayOneShot(winSound);
                     SetCenterText("PRESS START");
                     return;
                 }
@@ -203,9 +232,10 @@ public class GameController : MonoBehaviour
                 
                 preStartTimer = 120;
                 SetCenterText("ROUND  " + (p1.wins + p2.wins + 1).ToString());
+                sound.PlayOneShot(roundSound);
+                roundTime = maxRoundTime;
                 return;
                 
-                roundTime = maxRoundTime;
 
             }
             else
@@ -350,6 +380,7 @@ public class GameController : MonoBehaviour
             loser.Launch();
             loser.pushFrames = 40;
             started = false;
+            sound.PlayOneShot(endRoundSound);
 
             
             FixedTimeStep *= timeStepMultiplier;
@@ -366,6 +397,11 @@ public class GameController : MonoBehaviour
     public void SetCenterText(string text)
     {
         centerText.text = text;
+    }
+
+    public static void playAudio(AudioClip clip)
+    {
+        instance.sound.PlayOneShot(clip);
     }
 
     private void PollInput(Gamepad gp, int team)
@@ -450,8 +486,14 @@ public class GameController : MonoBehaviour
             {
                 if (!firstInput  && button == GamepadButton.Start)
                 {
+                    sound.PlayOneShot(playAgain);
+                    
                     Debug.Log($"first input {button}");
+                    music.Play();
                     SetCenterText("ROUND 1");
+                    sound.PlayOneShot(roundSound);
+                    
+                    
                     firstInput = true;
                 }
                 

@@ -30,6 +30,7 @@ public class HurtBox : MonoBehaviour
     {
         active = true;
     }
+    
 
     // Update is called once per frame
     void Update()
@@ -79,6 +80,7 @@ public class HurtBox : MonoBehaviour
                     if (fighter.launched)
                     {
                         Instantiate(parentFighter.HitObjPrefab, hitobjSpawnPosition, Quaternion.identity);
+                        parentFighter.currentAttack.playSound();
                         active = false;
                         fighter.Launch();
                         fighter.pushFrames = parentFighter.currentAttack.pushFrames;
@@ -91,6 +93,7 @@ public class HurtBox : MonoBehaviour
                     {
                         if (!parentFighter.currentAttack.standingMove) //check null todo:
                         {
+                            GameController.PlayBlockSound();
                             Instantiate(parentFighter.BlockObjPrefab, hitobjSpawnPosition, Quaternion.identity);
                             parentFighter.stillFrames = 10; // make var
                             parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
@@ -107,6 +110,7 @@ public class HurtBox : MonoBehaviour
                     {
                         if (parentFighter.currentAttack.standingMove)
                         {
+                            GameController.PlayBlockSound();
                             Instantiate(parentFighter.BlockObjPrefab, hitobjSpawnPosition, Quaternion.identity);
                             parentFighter.stillFrames = 10;
                             parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
@@ -151,6 +155,7 @@ public class HurtBox : MonoBehaviour
                     }
 
                     Instantiate(parentFighter.HitObjPrefab, hitobjSpawnPosition, Quaternion.identity);
+                    parentFighter.currentAttack.playSound();
                     active = false;
                     return;
                 }

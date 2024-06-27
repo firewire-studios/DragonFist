@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FighterMove
 {
+    public AudioClip sound = null;
     public string MoveName;
     public List<Fighter.Action> Actions;
     public int Priority;
@@ -92,5 +93,15 @@ public class FighterMove
 
         return false;
 
+    }
+
+    public void playSound()
+    {
+        if (sound == null)
+        {
+            return;
+        }
+        
+        GameController.playAudio(sound);
     }
 }

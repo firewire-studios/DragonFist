@@ -8,6 +8,13 @@ using UnityEngine.Serialization;
 
 public class Fighter : MonoBehaviour
 {
+
+    public AudioClip UpperCutSound;
+    public AudioClip StandardStrikeSound1;
+    public AudioClip StandardStrikeSound2;
+    public AudioClip StandardStrikeSound3;
+    public AudioClip DoomFistSound;
+    public AudioClip DoomPaperSound;
     
     public GameObject HitObjPrefab;
     public GameObject BlockObjPrefab;
@@ -204,6 +211,7 @@ public class Fighter : MonoBehaviour
         DragonTail.pushFrames = 20;
         DragonTail.frameInterval = 6;
         DragonTail.type = FighterMove.MoveType.Paper;
+        DragonTail.sound = StandardStrikeSound2;
         moves.Add(DragonTail);
         
         FighterMove DownJab = new FighterMove("DownJab",
@@ -221,6 +229,7 @@ public class Fighter : MonoBehaviour
         DownJab.frameInterval = 3;
         DownJab.type = FighterMove.MoveType.Rock;
         DownJab.dmg = 4;
+        DownJab.sound = StandardStrikeSound1;
         moves.Add(DownJab);
         
         FighterMove DownScissor = new FighterMove("DownScissor",
@@ -238,6 +247,7 @@ public class Fighter : MonoBehaviour
         DownScissor.frameInterval = 3;
         DownScissor.type = FighterMove.MoveType.Scissor;
         DownScissor.dmg = 5;
+        DownScissor.sound = StandardStrikeSound3;
         moves.Add(DownScissor);
         
         // Special Moves
@@ -253,6 +263,7 @@ public class Fighter : MonoBehaviour
         Rock.sprites = RockPunchSprites;
         Rock.hurtbox = JabHurtbox;
         Rock.dmg = 4;
+        Rock.sound = StandardStrikeSound1;
         //Rock.frameInterval = 30;
         moves.Add(Rock);
         
@@ -264,6 +275,7 @@ public class Fighter : MonoBehaviour
         Paper.type = FighterMove.MoveType.Paper;
         Paper.frameInterval = 1;
         Paper.dmg = 4;
+        Paper.sound = StandardStrikeSound2;
         moves.Add(Paper);
         
         Scissors.idleFrames = 1;
@@ -273,6 +285,7 @@ public class Fighter : MonoBehaviour
         Scissors.hurtbox = JabHurtbox;
         Scissors.type = FighterMove.MoveType.Scissor;
         Scissors.dmg = 4;
+        Scissors.sound = StandardStrikeSound3;
         //Paper.frameInterval = 1;
         moves.Add(Scissors);
 
@@ -284,6 +297,7 @@ public class Fighter : MonoBehaviour
         DragonJaw.hurtbox = UppercutHurtBox;
         DragonJaw.shouldLaunch = true;
         DragonJaw.dmg = 9;
+        DragonJaw.sound = UpperCutSound;
         moves.Add(DragonJaw);
         
         FighterMove Doomfist = new FighterMove("Doomfist",
@@ -301,6 +315,7 @@ public class Fighter : MonoBehaviour
         Doomfist.dmg = 22;
         Doomfist.pushFrames = 60;
         Doomfist.type = FighterMove.MoveType.Rock;
+        Doomfist.sound = DoomFistSound;
         moves.Add(Doomfist);
         
         FighterMove DoomPaper = new FighterMove("DoomPaper",
@@ -318,6 +333,7 @@ public class Fighter : MonoBehaviour
         DoomPaper.dmg = 17;
         DoomPaper.pushFrames = 60;
         DoomPaper.type = FighterMove.MoveType.Paper;
+        DoomPaper.sound = DoomPaperSound;
         moves.Add(DoomPaper);
         
         //moves.Add(Paper);
