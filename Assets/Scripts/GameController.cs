@@ -61,15 +61,25 @@ public class GameController : MonoBehaviour
     public AudioClip blockSound;
     public AudioClip playAgain;
     public AudioClip winSound;
+    public AudioClip wiff;
+    public AudioClip counter;
 
     public static void PlayBlockSound()
     {
-        float lastvolume = instance.sound.volume;
-
-        instance.sound.volume = 1;
         instance.sound.PlayOneShot(instance.blockSound);
 
-        instance.sound.volume = lastvolume;
+    }
+    
+    public static void PlayWiffSound()
+    {
+        instance.sound.PlayOneShot(instance.wiff);
+
+    }
+    
+    public static void PlayCounterSound()
+    {
+        instance.sound.PlayOneShot(instance.counter);
+
     }
     
     private void Awake()

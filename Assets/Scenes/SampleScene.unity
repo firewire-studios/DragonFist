@@ -1028,6 +1028,8 @@ MonoBehaviour:
   blockSound: {fileID: 8300000, guid: 574c3656604254929a1fb98db8aed962, type: 3}
   playAgain: {fileID: 8300000, guid: 22fa5cc65a2a945548252effb02d70fe, type: 3}
   winSound: {fileID: 8300000, guid: e9bf6b41194a94160a61fe65d1acf55c, type: 3}
+  wiff: {fileID: 8300000, guid: 745fc1240ad564a1ba2b00f14b5bfe53, type: 3}
+  counter: {fileID: 8300000, guid: ffffa6165974244c493b3a2322d6d948, type: 3}
 --- !u!4 &1499214478
 Transform:
   m_ObjectHideFlags: 0
@@ -1151,7 +1153,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8cd95a817f59a4c01b46a62e68cccee2, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.084
+  m_Volume: 0.692
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1247,7 +1249,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 561dcfe333f274e1ebd24257dc2bd586, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.058
+  m_Volume: 0.437
   m_Pitch: 1
   Loop: 1
   Mute: 0

@@ -61,6 +61,7 @@ public class HurtBox : MonoBehaviour
                 {
                     if (parentFighter.currentAttack.Beats(fighter.currentAttack))
                     {
+                        GameController.PlayCounterSound();
                         parentFighter.CounterBox.GetComponent<AppearAndFade>().Appear();
 
                         fighter.DeactivateHurtBox(fighter.currentAttack.hurtbox);
@@ -140,6 +141,7 @@ public class HurtBox : MonoBehaviour
                         
                         if (parentFighter.currentAttack.Beats(fighter.currentAttack))
                         {
+                            GameController.PlayCounterSound();
                             fighter.Launch();
                             fighter.health -= dmg;
                             parentFighter.CounterBox.GetComponent<AppearAndFade>().Appear();
@@ -173,7 +175,12 @@ public class HurtBox : MonoBehaviour
 
             }
             
+            
+
             //Debug.Log(collider.gameObject.name);
         }
+        
+        GameController.PlayWiffSound();
+        active = false;
     }
 }
