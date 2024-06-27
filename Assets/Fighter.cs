@@ -8,6 +8,9 @@ using UnityEngine.Serialization;
 
 public class Fighter : MonoBehaviour
 {
+    
+    public GameObject HitObjPrefab;
+    public GameObject BlockObjPrefab;
     public GameObject CounterBox;
     public MoveTypeIndicator MoveTypeIndicator;
     
@@ -27,6 +30,7 @@ public class Fighter : MonoBehaviour
     [SerializeField] public List<Sprite> RockPunchSprites;
     [SerializeField] public List<Sprite> DragonJawSprites; // rock type
     [SerializeField] public List<Sprite> DoomFistSprites; // rock type
+    [SerializeField] public List<Sprite> DoomPaperSprites; // paper type
     
     [SerializeField] public List<Sprite> PaperPunchSprites; // paper type
 
@@ -82,6 +86,7 @@ public class Fighter : MonoBehaviour
     public GameObject DownJabHurtBox;
     public GameObject ScissorDownHurtBox;
     public GameObject DoomFistHurtBox;
+    public GameObject DoomPaperHurtBox;
     
     
     // Hurtbox transforms
@@ -91,6 +96,7 @@ public class Fighter : MonoBehaviour
     private Vector3 DownJabHurtBoxStartPosition;
     private Vector3 ScissorDownHurtBoxStartPosition;
     private Vector3 DoomFistHurtBoxStartPosition;
+    private Vector3 DoomPaperHurtBoxStartPosition;
     
     private Vector3 UppercutHurtBoxStartPosition;
     
@@ -150,6 +156,9 @@ public class Fighter : MonoBehaviour
 
         DoomFistHurtBoxStartPosition = DoomFistHurtBox.transform.localPosition;
         DoomFistHurtBox.SetActive(false);
+        
+        DoomPaperHurtBoxStartPosition = DoomPaperHurtBox.transform.localPosition;
+        DoomPaperHurtBox.SetActive(false);
         
         // Register Moves
         moves = new List<FighterMove>();
@@ -288,6 +297,23 @@ public class Fighter : MonoBehaviour
         Doomfist.type = FighterMove.MoveType.Rock;
         moves.Add(Doomfist);
         
+        FighterMove DoomPaper = new FighterMove("DoomPaper",
+            new List<Action>(){Action.Down,Action.Backward,Action.Paper},
+            1
+        );
+        
+        DoomPaper.idleFrames = 0;
+        DoomPaper.hurtFrames = 4;
+        DoomPaper.coolDownFrames = 1;
+        DoomPaper.sprites = DoomPaperSprites;
+        DoomPaper.frameInterval = 2;
+        DoomPaper.hurtbox = DoomPaperHurtBox;
+        DoomPaper.shouldLaunch = false;
+        DoomPaper.dmg = 15;
+        DoomPaper.pushFrames = 60;
+        DoomPaper.type = FighterMove.MoveType.Paper;
+        moves.Add(DoomPaper);
+        
         //moves.Add(Paper);
         //moves.Add(Scissors);
 
@@ -375,7 +401,7 @@ public class Fighter : MonoBehaviour
         currentSpriteIndex = 0;
         if (currentAttack != null)
         {
-            DeactivateHurtBox(currentAttack.hurtbox);
+            //DeactivateHurtBox(currentAttack.hurtbox);
             currentAttack = null;
         }
     }
@@ -473,7 +499,6 @@ public class Fighter : MonoBehaviour
                 spr.sprite = currentAttack.sprites[currentSpriteIndex];
                 if (currentAttack.IsHurtFrame(currentSpriteIndex))
                 {
-                    Debug.Log("Activeate Hurt Box");
                     if (!currentAttack.hurtbox.activeSelf)
                     {
                         ActivateHurtBox(currentAttack.hurtbox);
@@ -654,6 +679,7 @@ public class Fighter : MonoBehaviour
             DownJabHurtBox.transform.localPosition = DownJabHurtBoxStartPosition;
             ScissorDownHurtBox.transform.localPosition = ScissorDownHurtBoxStartPosition;
             DoomFistHurtBox.transform.localPosition = DoomFistHurtBoxStartPosition;
+            DoomPaperHurtBox.transform.localPosition = DoomPaperHurtBoxStartPosition;
             spr.flipX = false;
             return;
         }
@@ -667,6 +693,7 @@ public class Fighter : MonoBehaviour
             DownJabHurtBox.transform.localPosition = new Vector3(-DownJabHurtBoxStartPosition.x,DownJabHurtBoxStartPosition.y,-DownJabHurtBoxStartPosition.z);
             ScissorDownHurtBox.transform.localPosition = new Vector3(-ScissorDownHurtBoxStartPosition.x,ScissorDownHurtBoxStartPosition.y,-ScissorDownHurtBoxStartPosition.z);
             DoomFistHurtBox.transform.localPosition = new Vector3(-DoomFistHurtBoxStartPosition.x,DoomFistHurtBoxStartPosition.y,-DoomFistHurtBoxStartPosition.z);
+            DoomPaperHurtBox.transform.localPosition = new Vector3(-DoomPaperHurtBoxStartPosition.x,DoomPaperHurtBoxStartPosition.y,-DoomPaperHurtBoxStartPosition.z);
         }
     }
 }

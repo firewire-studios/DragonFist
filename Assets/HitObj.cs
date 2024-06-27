@@ -16,26 +16,28 @@ public class HitObj : MonoBehaviour
     private int frame = 0;
     private int frameTime = 0;
     
+    [SerializeField]
     private List<Sprite> sprList;
+    
     void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        sprList = new List<Sprite>()
-        {
-            spr1,
-            spr2,
-            spr3,
-        };
     }
     
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (frameTime > 4)
+        if (frameTime > 3)
         {
-            frame = frame + 1 >= sprList.Count ? 0 : frame + 1;
-            //_spriteRenderer.sprite = sprList[frame];
+            if (frame >= sprList.Count)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            _spriteRenderer.sprite = sprList[frame];
+            frame++;
             frameTime = 0;
         }
         

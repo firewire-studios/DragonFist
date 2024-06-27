@@ -36,6 +36,9 @@ public class HurtBox : MonoBehaviour
         {
             return;
         }
+
+        Vector3 hitobjSpawnPosition = transform.position;
+        hitobjSpawnPosition.z = -5;
         ContactFilter2D filter = new ContactFilter2D().NoFilter();
 
         List<Collider2D> results = new List<Collider2D>();
@@ -51,11 +54,12 @@ public class HurtBox : MonoBehaviour
                 {
                     if (parentFighter.currentAttack.Beats(fighter.currentAttack))
                     {
+                        parentFighter.CounterBox.GetComponent<AppearAndFade>().Appear();
+
                         fighter.Launch();
                         fighter.pushFrames = parentFighter.currentAttack.pushFrames;
                         fighter.DeactivateHurtBox(fighter.currentAttack.hurtbox);
                         fighter.currentAttack = null;
-                        parentFighter.CounterBox.GetComponent<AppearAndFade>().Appear();
                         active = false;
                         return;
                     }
@@ -72,7 +76,7 @@ public class HurtBox : MonoBehaviour
                 {
                     if (fighter.launched)
                     {
-                        Debug.Log("Launch Again");
+                        Instantiate(parentFighter.HitObjPrefab, hitobjSpawnPosition, Quaternion.identity);
                         active = false;
                         fighter.Launch();
                         fighter.pushFrames = parentFighter.currentAttack.pushFrames;
@@ -85,6 +89,7 @@ public class HurtBox : MonoBehaviour
                     {
                         if (!parentFighter.currentAttack.standingMove) //check null todo:
                         {
+                            Instantiate(parentFighter.BlockObjPrefab, hitobjSpawnPosition, Quaternion.identity);
                             parentFighter.stillFrames = 10; // make var
                             parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
                             parentFighter.currentAttack = null;
@@ -100,6 +105,7 @@ public class HurtBox : MonoBehaviour
                     {
                         if (parentFighter.currentAttack.standingMove)
                         {
+                            Instantiate(parentFighter.BlockObjPrefab, hitobjSpawnPosition, Quaternion.identity);
                             parentFighter.stillFrames = 10;
                             parentFighter.pushFrames = parentFighter.currentAttack.pushFrames;
                             parentFighter.currentAttack = null;
@@ -120,9 +126,9 @@ public class HurtBox : MonoBehaviour
                         {
                             fighter.Launch();
                             fighter.health -= dmg;
+                            parentFighter.CounterBox.GetComponent<AppearAndFade>().Appear();
                             fighter.pushFrames = parentFighter.currentAttack.pushFrames;
                            // fighter.currentAttack = null;
-                           parentFighter.CounterBox.GetComponent<AppearAndFade>().Appear();
                            active = false;
                             return;
                         }
@@ -141,7 +147,8 @@ public class HurtBox : MonoBehaviour
                     {
                         fighter.Stun();
                     }
-                    
+
+                    Instantiate(parentFighter.HitObjPrefab, hitobjSpawnPosition, Quaternion.identity);
                     active = false;
                     return;
                 }
